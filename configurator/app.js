@@ -1,15 +1,6 @@
-const state = {
-  preset: 'generic',
-  profile: 'balanced',
-  concurrency: 1,
-  lang: 'en',
-};
+import { DEFAULT_CONFIG, PROFILE_EFFORTS, buildInitCommand, configFromSearch, configToSearch, normalizeConfig, usagePercent } from './core.js';
 
-const efforts = {
-  economy: { explorer: 'medium', worker: 'medium', reviewer: 'high', usage: 38, label: { en: 'Economy', es: 'Economía' } },
-  balanced: { explorer: 'medium', worker: 'high', reviewer: 'high', usage: 58, label: { en: 'Balanced', es: 'Balanceado' } },
-  quality: { explorer: 'high', worker: 'high', reviewer: 'high', usage: 76, label: { en: 'Higher', es: 'Mayor' } },
-};
+let state = { ...DEFAULT_CONFIG };
 
 const copy = {
   en: {
@@ -18,7 +9,7 @@ const copy = {
     configureTitle:'Configure', configureBody:'Three choices define the local stack.', presetLabel:'Goal preset', presetGeneric:'General software work', presetFrontend:'Evidence-driven UI work', presetBackend:'APIs, services and contracts',
     profileLabel:'Execution profile', concurrencyLabel:'Maximum subagent concurrency', concurrencyOne:'Conservative', concurrencyTwo:'Moderate', concurrencyThree:'Higher',
     previewTitle:'Live configuration', previewBody:'What Codex will load in this project.', supervisor:'Supervisor', youChoose:'you choose', supervisorRole:'Plans · delegates · evaluates · stops', readOnly:'read-only', writes:'writes', explorerRole:'Targeted discovery and repository understanding.', workerRole:'Implementation, debugging, testing and validation.', reviewerRole:'Independent verification and final quality gate.', usageLabel:'Relative model usage',
-    commandTitle:'Copy the command', commandBody:'Preview first, then install the exact configuration you chose.', copyPreview:'Copy preview', copyInstall:'Copy install', copyShare:'Copy share link',
+    commandTitle:'Copy the command', commandBody:'Preview first, then install the exact configuration you chose from npm.', copyPreview:'Copy preview', copyInstall:'Copy install', copyShare:'Copy share link',
     filesTitle:'Six managed project files. Nothing global.', filesBody:'The installer backs up managed conflicts and never changes ~/.codex.',
     safetyTitle:'Designed to be inspectable.', safetyPreviewTitle:'Preview before write', safetyPreviewBody:'--dry-run and diff show intended changes without modifying the target.', safetyBackupTitle:'Backups before replacement', safetyBackupBody:'Managed conflicts are copied to a local backup directory before replacement.', safetyRolesTitle:'Scoped roles', safetyRolesBody:'Explorer and Reviewer remain read-only; nested subagents stay disabled.',
     footerText:'Community project · MIT · Not affiliated with OpenAI', copied:'Copied to clipboard.', profileNoteBalanced:'Recommended default for real project work.', profileNoteEconomy:'Lower model effort for routine or well-scoped work.', profileNoteQuality:'Higher discovery effort for difficult repositories.', concurrencyNoteOne:'Recommended default. Goal presets remain conservative and sequential by design.', concurrencyNoteMany:'Raises the maximum subagent thread cap. Higher values can increase simultaneous model usage.',
@@ -29,51 +20,40 @@ const copy = {
     configureTitle:'Configura', configureBody:'Tres decisiones definen la pila local.', presetLabel:'Preset de Goal', presetGeneric:'Trabajo general de software', presetFrontend:'UI guiada por evidencia visual', presetBackend:'APIs, servicios y contratos',
     profileLabel:'Perfil de ejecución', concurrencyLabel:'Concurrencia máxima de subagentes', concurrencyOne:'Conservadora', concurrencyTwo:'Moderada', concurrencyThree:'Mayor',
     previewTitle:'Configuración en vivo', previewBody:'Lo que Codex cargará en este proyecto.', supervisor:'Supervisor', youChoose:'tú eliges', supervisorRole:'Planifica · delega · evalúa · detiene', readOnly:'solo lectura', writes:'escribe', explorerRole:'Descubrimiento puntual y comprensión del repositorio.', workerRole:'Implementación, debugging, pruebas y validación.', reviewerRole:'Verificación independiente y control final de calidad.', usageLabel:'Uso relativo de modelos',
-    commandTitle:'Copia el comando', commandBody:'Previsualiza primero y luego instala exactamente la configuración elegida.', copyPreview:'Copiar preview', copyInstall:'Copiar instalación', copyShare:'Copiar enlace',
+    commandTitle:'Copia el comando', commandBody:'Previsualiza primero y luego instala desde npm exactamente la configuración elegida.', copyPreview:'Copiar preview', copyInstall:'Copiar instalación', copyShare:'Copiar enlace',
     filesTitle:'Seis archivos administrados. Nada global.', filesBody:'El instalador respalda conflictos administrados y nunca modifica ~/.codex.',
     safetyTitle:'Diseñado para poder inspeccionarse.', safetyPreviewTitle:'Preview antes de escribir', safetyPreviewBody:'--dry-run y diff muestran los cambios previstos sin modificar el proyecto.', safetyBackupTitle:'Backups antes de reemplazar', safetyBackupBody:'Los conflictos administrados se copian a un backup local antes de reemplazarse.', safetyRolesTitle:'Roles acotados', safetyRolesBody:'Explorer y Reviewer siguen en solo lectura; los subagentes anidados permanecen deshabilitados.',
     footerText:'Proyecto comunitario · MIT · No afiliado con OpenAI', copied:'Copiado al portapapeles.', profileNoteBalanced:'Predeterminado recomendado para trabajo real de proyecto.', profileNoteEconomy:'Menor esfuerzo de modelo para trabajo rutinario o bien acotado.', profileNoteQuality:'Mayor esfuerzo de descubrimiento para repositorios difíciles.', concurrencyNoteOne:'Predeterminado recomendado. Los Goal presets siguen siendo conservadores y secuenciales por diseño.', concurrencyNoteMany:'Eleva el máximo de threads de subagentes. Valores mayores pueden aumentar el uso simultáneo de modelos.',
   }
 };
 
-function loadFromUrl(){
-  const p = new URLSearchParams(location.search);
-  if(['generic','frontend-visual','backend'].includes(p.get('preset'))) state.preset = p.get('preset');
-  if(['economy','balanced','quality'].includes(p.get('profile'))) state.profile = p.get('profile');
-  if(['1','2','3'].includes(p.get('concurrency'))) state.concurrency = Number(p.get('concurrency'));
-  if(['en','es'].includes(p.get('lang'))) state.lang = p.get('lang');
-}
-
-function command(dry){
-  return `npx --yes github:crunaldo/codex-autopilot-kit init \\\n  --target . \\\n  --preset ${state.preset} \\\n  --profile ${state.profile} \\\n  --concurrency ${state.concurrency} \\\n  --yes${dry ? ' \\\n  --dry-run' : ''}`;
-}
-
-function syncUrl(){
-  const p = new URLSearchParams({preset:state.preset,profile:state.profile,concurrency:String(state.concurrency),lang:state.lang});
-  history.replaceState(null,'',`${location.pathname}?${p.toString()}`);
-}
+function loadFromUrl(){ state = configFromSearch(location.search); }
+function command(dry){ return buildInitCommand(state, { dryRun: dry, source: 'npm' }); }
+function syncUrl(){ history.replaceState(null,'',`${location.pathname}?${configToSearch(state)}`); }
 
 function render(){
+  state = normalizeConfig(state);
   document.documentElement.lang = state.lang;
   document.querySelector('#langToggle').textContent = state.lang === 'en' ? 'ES' : 'EN';
   document.querySelectorAll('[data-i18n]').forEach(el => { const key=el.dataset.i18n; if(copy[state.lang][key]) el.textContent=copy[state.lang][key]; });
   document.querySelectorAll('[data-group]').forEach(el => {
     const key = el.dataset.group;
     const value = key === 'concurrency' ? Number(el.dataset.value) : el.dataset.value;
-    el.classList.toggle('active', state[key] === value);
-    el.setAttribute('aria-pressed', state[key] === value ? 'true' : 'false');
+    const active = state[key] === value;
+    el.classList.toggle('active', active);
+    el.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
-  const e = efforts[state.profile];
+  const e = PROFILE_EFFORTS[state.profile];
   document.querySelector('#explorerEffort').textContent=e.explorer;
   document.querySelector('#workerEffort').textContent=e.worker;
   document.querySelector('#reviewerEffort').textContent=e.reviewer;
-  document.querySelector('#usageLabel').textContent=e.label[state.lang];
-  document.querySelector('#usageMeter').style.width=`${Math.min(94,e.usage+(state.concurrency-1)*8)}%`;
+  document.querySelector('#usageLabel').textContent=state.profile === 'economy' ? copy[state.lang].concurrencyOne.replace('Conservative','Economy').replace('Conservadora','Economía') : state.profile === 'quality' ? copy[state.lang].concurrencyThree : state.lang === 'en' ? 'Balanced' : 'Balanceado';
+  document.querySelector('#usageMeter').style.width=`${usagePercent(state)}%`;
   const profileKey = state.profile==='balanced'?'profileNoteBalanced':state.profile==='economy'?'profileNoteEconomy':'profileNoteQuality';
   document.querySelector('#profileNote').textContent=copy[state.lang][profileKey];
   document.querySelector('#concurrencyNote').textContent=copy[state.lang][state.concurrency===1?'concurrencyNoteOne':'concurrencyNoteMany'];
   document.querySelector('#commandOutput').textContent=command(true);
-  document.querySelector('#terminalLabel').textContent='preview';
+  document.querySelector('#terminalLabel').textContent='npm · preview';
   syncUrl();
 }
 
