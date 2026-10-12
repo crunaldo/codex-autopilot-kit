@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — v0.4.0
+
+### Visual Configurator
+
+- Added a public visual configurator deployed with GitHub Pages.
+- Added preset, execution profile, and concurrency controls with live Explorer/Worker/Reviewer preview.
+- Added EN/ES UI, shareable URL state, and copyable preview/install commands.
+- Switched configurator-generated commands to the published npm package while keeping GitHub as the canonical source/fallback.
+- Added a framework-free `configurator/core.js` module so command generation and URL state can be tested independently from the DOM.
+- Added exhaustive automated coverage for all 54 preset × profile × concurrency × language combinations.
+- Pointed package homepage metadata to the configurator.
+- Kept the configurator static, client-side, and free of runtime dependencies.
+
 ## 0.3.0 — 2026-10-12
 
 ### Distribution & Discovery
