@@ -2,33 +2,31 @@
   <img src="assets/brand/banner.svg" alt="Codex Autopilot Kit" width="100%" />
 </p>
 
+<p align="center">
+  <strong>English</strong> · <a href="README.es.md">Español</a>
+</p>
+
 # Codex Autopilot Kit
 
-**A safe, project-scoped multi-agent autopilot for Codex.**
+<p align="center">
+  <strong>Keep Codex. Add Autopilot.</strong><br />
+  Turn an existing Codex project into a safe, project-scoped multi-agent workflow in one command.
+</p>
 
-Codex Autopilot Kit installs a tested `.codex/` agent stack plus reusable Goal templates into any repository. It is designed for long-running coding work where a strong supervisor plans and evaluates while cheaper scoped workers execute, test, and review.
+<p align="center">
+  <a href="../../actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/crunaldo/codex-autopilot-kit/ci.yml?branch=main&label=CI" alt="CI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+  <a href="docs/SAFETY.md"><img src="https://img.shields.io/badge/config-project--scoped-success" alt="Project scoped" /></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/runtime_dependencies-0-success" alt="Zero runtime dependencies" /></a>
+</p>
+
+Codex Autopilot Kit installs a tested `.codex/` agent stack plus reusable Goal templates into an existing repository. A strong supervisor plans and evaluates while scoped subagents explore, implement, test, and independently review.
+
+It is deliberately **not another coding agent, IDE, cloud platform, or orchestration runtime**. It is a lightweight autopilot layer for people who already want to use Codex and do not want to replace their existing workflow.
 
 > Default strategy: **Supervisor (you choose) → Luna Medium explorer → Luna High worker → Luna High reviewer**, one subagent at a time.
 
-[![CI](https://img.shields.io/github/actions/workflow/status/crunaldo/codex-autopilot-kit/ci.yml?branch=main&label=CI)](../../actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Project scoped](https://img.shields.io/badge/config-project--scoped-success)](docs/SAFETY.md)
-[![No runtime dependencies](https://img.shields.io/badge/runtime_dependencies-0-success)](package.json)
-
-## Why this exists
-
-Long autonomous Codex runs can become expensive or unpredictable when every delegated task uses the strongest available model. This kit separates responsibilities:
-
-- **Supervisor:** reasoning, planning, evaluation, stopping decisions.
-- **Explorer:** narrow read-only discovery.
-- **Worker:** implementation, debugging, and validation.
-- **Reviewer:** independent final review.
-
-The included configuration deliberately avoids an automatic “Max” escalation role because Codex Desktop may not always honor subagent reasoning overrides consistently. Escalation is handled by the supervisor instead.
-
-## Install in a project
-
-### Recommended: invoke this repository with `npx`
+## Install in one command
 
 From the target project root:
 
@@ -36,7 +34,118 @@ From the target project root:
 npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset generic
 ```
 
-For visual/frontend cloning work:
+Then verify it:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit doctor --target .
+```
+
+The installer stays inside the target project, backs up conflicting managed files, creates a local manifest, and never edits your global `~/.codex` configuration.
+
+## Why Codex Autopilot Kit?
+
+A long autonomous coding run should not require turning every step into the most expensive possible model call or adopting an entirely new agent platform.
+
+Codex Autopilot Kit separates responsibilities instead:
+
+- **Supervisor** — planning, reasoning, evaluation, escalation, and stopping decisions.
+- **Explorer** — narrow, read-only discovery before implementation.
+- **Worker** — implementation, debugging, testing, and validation.
+- **Reviewer** — independent, read-only final review.
+
+The result is a small project-local layer with explicit roles, reusable Goal contracts, conservative defaults, recovery paths, and no package runtime dependencies.
+
+### What it optimizes for
+
+| Principle | Codex Autopilot Kit approach |
+|---|---|
+| Keep the existing tool | Adds structure **to Codex** instead of replacing it |
+| Project isolation | Configuration lives in the repository, not global user config |
+| Predictable delegation | Explicit explorer, worker, and reviewer responsibilities |
+| Conservative autonomy | One subagent concurrently by default |
+| Inspectable setup | Managed files, manifest, backups, `status`, and `doctor` |
+| Cost-aware execution | Strong supervisor + scoped worker roles instead of strongest-model-everywhere |
+| Reusable workflows | Goal presets for general, frontend/visual, and backend work |
+| Low operational footprint | Zero package runtime dependencies; no hidden services |
+
+## Architecture
+
+```text
+                         ┌────────────────────┐
+                         │     SUPERVISOR     │
+                         │   model you choose │
+                         └─────────┬──────────┘
+                                   │
+                        plan / delegate / judge
+                                   │
+                 ┌─────────────────┼─────────────────┐
+                 │                 │                 │
+                 ▼                 ▼                 ▼
+          ┌────────────┐    ┌────────────┐    ┌────────────┐
+          │  EXPLORER  │    │   WORKER   │    │  REVIEWER  │
+          │ read-only  │    │ implements │    │ read-only  │
+          │   medium   │    │    high    │    │    high    │
+          └────────────┘    └────────────┘    └────────────┘
+                 │                 │                 │
+                 └─────────────────┴─────────────────┘
+                                   │
+                            PASS / FIX / BLOCKED
+```
+
+This separation is intentional: discovery and review do not need write access, implementation stays scoped, and the supervisor retains escalation decisions.
+
+## How it fits among other agent tools
+
+Codex Autopilot Kit is intentionally narrower than full agent platforms and orchestration frameworks. The table below describes **positioning, not a benchmark**; these projects evolve quickly and solve different problems well.
+
+| Project | Best fit when you want... | Primary approach | Scope |
+|---|---|---|---|
+| **Codex Autopilot Kit** | To keep using Codex but add safe project-local multi-agent autonomy | Codex configuration + Goal contracts + specialized roles | **Codex-first** |
+| [Ralph Orchestrator](https://github.com/mikeyobrien/ralph-orchestrator) | A richer autonomous orchestration framework with iterative workflows | Orchestration runtime with hats/events/presets | Multi-backend |
+| [OpenHands](https://github.com/OpenHands/OpenHands) | A broader agent platform/control center with isolated or remote execution options | Agent platform + workspaces/backends | Multi-agent / multi-backend |
+| [OpenCode](https://github.com/anomalyco/opencode) | A standalone open-source coding agent experience | Coding agent with its own CLI/TUI/Desktop ecosystem | Multi-provider |
+| [Open Ralph Wiggum](https://github.com/Th0rgal/open-ralph-wiggum) | A lightweight autonomous loop around existing coding-agent CLIs | Repeated agent loop | Multi-agent CLI |
+| [Awesome Agent Orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) | To discover and compare orchestration projects | Curated ecosystem directory | Reference list |
+
+### Choose this kit if...
+
+- you already use **Codex** and want to keep it;
+- you want multi-agent roles without adopting a separate orchestration platform;
+- you prefer configuration that is **repository-scoped and reversible**;
+- you want explorer and reviewer roles to remain read-only by default;
+- you want a reusable autonomous Goal contract instead of an unbounded “keep trying” loop;
+- you value a small operational footprint and explicit safety boundaries.
+
+If you need a provider-agnostic agent, a full control plane, remote workspaces, or a general multi-backend orchestration runtime, one of the projects above may be a better fit. Codex Autopilot Kit focuses on doing one thing well: **making an existing Codex project more autonomous without taking it over**.
+
+## What gets installed
+
+The exact generated files depend on the selected preset/profile, but the managed stack includes:
+
+```text
+.codex/
+  config.toml
+  agents/
+    explorer.toml
+    worker.toml
+    reviewer.toml
+
+AUTOPILOT-GOAL.md
+```
+
+The installer also records a local manifest and creates backups before replacing conflicting managed paths.
+
+## Installation
+
+### Recommended: invoke this repository with `npx`
+
+General software work:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset generic
+```
+
+Visual/frontend cloning work:
 
 ```bash
 npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset frontend-visual
@@ -191,6 +300,13 @@ These observations are anecdotal, environment-specific, and not an OpenAI benchm
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Optional ChatGPT Web bridge](docs/BRIDGE_SETUP.md)
 - [Field notes](docs/field-notes/2026-10.md)
+- [Guía en español](README.es.md)
+
+## Project status
+
+See [ROADMAP.md](ROADMAP.md) for planned improvements.
+
+Codex Autopilot Kit is a community project and is not affiliated with or endorsed by OpenAI. Product names and trademarks belong to their respective owners.
 
 ## Contributing
 
