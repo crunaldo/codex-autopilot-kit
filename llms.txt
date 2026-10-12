@@ -3,6 +3,8 @@
 > Project-scoped, zero-runtime-dependency multi-agent autopilot layer for Codex.
 
 Repository: https://github.com/crunaldo/codex-autopilot-kit
+Configurator: https://crunaldo.github.io/codex-autopilot-kit/
+npm: https://www.npmjs.com/package/codex-autopilot-kit
 License: MIT
 Node.js: 20+
 CLI: codex-autopilot
@@ -21,7 +23,11 @@ Default concurrency is 1.
 
 ## Preferred installation for humans
 
-From the target repository root:
+Use the visual configurator or run from the target repository root:
+
+    npx --yes codex-autopilot-kit init --target .
+
+The GitHub source remains available as a fallback:
 
     npx --yes github:crunaldo/codex-autopilot-kit init --target .
 
@@ -29,19 +35,23 @@ From the target repository root:
 
 Read `INSTALL_FOR_AGENTS.md` first. Use the non-interactive preview before writing:
 
-    npx --yes github:crunaldo/codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes --dry-run
+    npx --yes codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes --dry-run
 
 Then inspect:
 
-    npx --yes github:crunaldo/codex-autopilot-kit diff --target . --profile balanced --preset generic --concurrency 1 --json
+    npx --yes codex-autopilot-kit diff --target . --profile balanced --preset generic --concurrency 1 --json
 
 Install only after the desired configuration is confirmed:
 
-    npx --yes github:crunaldo/codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes
+    npx --yes codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes
 
 Verify:
 
-    npx --yes github:crunaldo/codex-autopilot-kit doctor --target . --json
+    npx --yes codex-autopilot-kit doctor --target . --json
+
+## Visual configurator contract
+
+The public configurator is a static client-side UI. Its shareable URL encodes `preset`, `profile`, `concurrency`, and `lang`. Generated commands must correspond exactly to that state. The core state/command logic lives in `configurator/core.js` and is covered by automated tests across all supported combinations.
 
 ## Safety invariants
 
@@ -112,7 +122,7 @@ After installation, start a NEW Codex chat so project-local configuration reload
 
 ## Distribution
 
-The GitHub repository is the canonical source. npm publication is supported by the release workflow when npm credentials/trusted publishing are configured. Never claim an npm version is published unless the npm registry confirms it.
+`codex-autopilot-kit@0.3.0` is published on npm and is the current `latest` release. GitHub remains the canonical source repository. npm release automation uses staged publishing with provenance and a manual approval boundary.
 
 ## Project identity
 
