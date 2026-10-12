@@ -1,7 +1,7 @@
 {
   "name": "codex-autopilot-kit",
   "version": "0.2.0",
-  "description": "Project-scoped multi-agent autopilot installer for Codex",
+  "description": "Safe project-scoped multi-agent autopilot for Codex with interactive setup, diff, doctor, and reusable Goal contracts",
   "type": "module",
   "bin": {
     "codex-autopilot": "./bin/codex-autopilot.mjs"
@@ -9,7 +9,9 @@
   "scripts": {
     "test": "node scripts/test.mjs",
     "verify": "node scripts/verify-package.mjs",
-    "doctor": "node bin/codex-autopilot.mjs doctor --target ."
+    "doctor": "node bin/codex-autopilot.mjs doctor --target .",
+    "release:check": "npm test && npm run verify && npm pack --dry-run",
+    "prepublishOnly": "npm run release:check"
   },
   "engines": {
     "node": ">=20"
@@ -19,9 +21,13 @@
     "openai",
     "agents",
     "subagents",
+    "multi-agent",
+    "coding-agent",
     "autopilot",
+    "cli",
     "goal",
-    "mcp"
+    "agent-orchestration",
+    "project-scoped"
   ],
   "license": "MIT",
   "repository": {
@@ -32,6 +38,10 @@
     "url": "https://github.com/crunaldo/codex-autopilot-kit/issues"
   },
   "homepage": "https://github.com/crunaldo/codex-autopilot-kit#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "files": [
     "bin/",
     "templates/",
@@ -43,6 +53,9 @@
     "uninstall.sh",
     "LICENSE",
     "README.md",
-    "README.es.md"
+    "README.es.md",
+    "INSTALL_FOR_AGENTS.md",
+    "llms.txt",
+    "CHANGELOG.md"
   ]
 }
