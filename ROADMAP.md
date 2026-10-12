@@ -1,5 +1,12 @@
 # Roadmap
 
+## Recently completed
+
+- Interactive `codex-autopilot init` setup wizard.
+- Preset, profile, and concurrency selection before install.
+- Configuration summary and confirmation gate.
+- Non-interactive `init` path for CI/automation.
+
 ## Near term
 
 - More installer merge strategies for pre-existing `.codex/config.toml` files.
@@ -9,7 +16,6 @@
 
 ## Later
 
-- Optional interactive setup wizard.
 - Signed release artifacts.
 - Optional npm publication if community demand justifies it.
 
