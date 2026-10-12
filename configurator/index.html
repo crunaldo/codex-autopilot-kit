@@ -4,181 +4,36 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#090d19" />
-  <meta name="description" content="Configure a safe, project-scoped Codex multi-agent autopilot and copy the exact install command." />
+  <meta name="description" content="Configure a safe, project-scoped Codex multi-agent autopilot and copy the exact npm install command." />
   <meta property="og:title" content="Codex Autopilot Kit — Visual Configurator" />
-  <meta property="og:description" content="Choose a preset, profile, and concurrency. Preview the agent stack. Copy the exact command." />
+  <meta property="og:description" content="Choose a preset, profile, and concurrency. Preview the agent stack. Copy the exact npm command." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://crunaldo.github.io/codex-autopilot-kit/" />
   <title>Codex Autopilot Kit — Visual Configurator</title>
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="ambient ambient-a" aria-hidden="true"></div>
-  <div class="ambient ambient-b" aria-hidden="true"></div>
-
+  <div class="ambient ambient-a" aria-hidden="true"></div><div class="ambient ambient-b" aria-hidden="true"></div>
   <header class="shell topbar">
-    <a class="brand" href="./" aria-label="Codex Autopilot Kit home">
-      <img src="assets/logo.svg" alt="" width="38" height="38" />
-      <span>Codex Autopilot Kit</span>
-    </a>
-    <nav class="top-actions" aria-label="Primary navigation">
-      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">ES</button>
-      <a class="quiet-link" href="https://github.com/crunaldo/codex-autopilot-kit/blob/main/docs/GETTING_STARTED.md">Docs</a>
-      <a class="button ghost" href="https://github.com/crunaldo/codex-autopilot-kit">GitHub</a>
-    </nav>
+    <a class="brand" href="./" aria-label="Codex Autopilot Kit home"><img src="assets/logo.svg" alt="" width="38" height="38" /><span>Codex Autopilot Kit</span></a>
+    <nav class="top-actions" aria-label="Primary navigation"><button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">ES</button><a class="quiet-link" href="https://www.npmjs.com/package/codex-autopilot-kit">npm</a><a class="quiet-link" href="https://github.com/crunaldo/codex-autopilot-kit/blob/main/docs/GETTING_STARTED.md">Docs</a><a class="button ghost" href="https://github.com/crunaldo/codex-autopilot-kit">GitHub</a></nav>
   </header>
-
   <main>
-    <section class="shell hero">
-      <div class="hero-copy">
-        <h1 data-i18n="heroTitle">Build your Codex autopilot.</h1>
-        <p data-i18n="heroBody">Choose the workflow you need. See exactly which agents will run, how strongly they reason, and copy a project-scoped install command.</p>
-      </div>
-      <div class="hero-proof" aria-label="Product guarantees">
-        <span><i></i><b data-i18n="proofScoped">Project-scoped</b></span>
-        <span><i></i><b data-i18n="proofZero">0 runtime dependencies</b></span>
-        <span><i></i><b data-i18n="proofPreview">Preview before write</b></span>
-      </div>
-    </section>
-
+    <section class="shell hero"><div class="hero-copy"><h1 data-i18n="heroTitle">Build your Codex autopilot.</h1><p data-i18n="heroBody">Choose the workflow you need. See exactly which agents will run, how strongly they reason, and copy a project-scoped install command.</p></div><div class="hero-proof" aria-label="Product guarantees"><span><i></i><b data-i18n="proofScoped">Project-scoped</b></span><span><i></i><b data-i18n="proofZero">0 runtime dependencies</b></span><span><i></i><b data-i18n="proofPreview">Preview before write</b></span></div></section>
     <section class="shell configurator" aria-label="Autopilot configurator">
-      <form class="control-panel" id="configForm">
-        <div class="section-heading">
-          <span class="step">01</span>
-          <div>
-            <h2 data-i18n="configureTitle">Configure</h2>
-            <p data-i18n="configureBody">Three choices define the local stack.</p>
-          </div>
-        </div>
-
-        <fieldset>
-          <legend data-i18n="presetLabel">Goal preset</legend>
-          <div class="choice-grid preset-grid" id="presetChoices">
-            <button type="button" class="choice" data-group="preset" data-value="generic">
-              <strong>Generic</strong><small data-i18n="presetGeneric">General software work</small>
-            </button>
-            <button type="button" class="choice" data-group="preset" data-value="frontend-visual">
-              <strong>Frontend visual</strong><small data-i18n="presetFrontend">Evidence-driven UI work</small>
-            </button>
-            <button type="button" class="choice" data-group="preset" data-value="backend">
-              <strong>Backend</strong><small data-i18n="presetBackend">APIs, services and contracts</small>
-            </button>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend data-i18n="profileLabel">Execution profile</legend>
-          <div class="choice-grid profile-grid" id="profileChoices">
-            <button type="button" class="choice" data-group="profile" data-value="economy"><strong>Economy</strong><small>M · M · H</small></button>
-            <button type="button" class="choice" data-group="profile" data-value="balanced"><strong>Balanced</strong><small>M · H · H</small></button>
-            <button type="button" class="choice" data-group="profile" data-value="quality"><strong>Quality</strong><small>H · H · H</small></button>
-          </div>
-          <p class="field-note" id="profileNote"></p>
-        </fieldset>
-
-        <fieldset>
-          <legend data-i18n="concurrencyLabel">Maximum subagent concurrency</legend>
-          <div class="number-choice" id="concurrencyChoices">
-            <button type="button" data-group="concurrency" data-value="1"><b>1</b><span data-i18n="concurrencyOne">Conservative</span></button>
-            <button type="button" data-group="concurrency" data-value="2"><b>2</b><span data-i18n="concurrencyTwo">Moderate</span></button>
-            <button type="button" data-group="concurrency" data-value="3"><b>3</b><span data-i18n="concurrencyThree">Higher</span></button>
-          </div>
-          <p class="field-note" id="concurrencyNote"></p>
-        </fieldset>
+      <form class="control-panel" id="configForm"><div class="section-heading"><span class="step">01</span><div><h2 data-i18n="configureTitle">Configure</h2><p data-i18n="configureBody">Three choices define the local stack.</p></div></div>
+        <fieldset><legend data-i18n="presetLabel">Goal preset</legend><div class="choice-grid preset-grid" id="presetChoices"><button type="button" class="choice" data-group="preset" data-value="generic"><strong>Generic</strong><small data-i18n="presetGeneric">General software work</small></button><button type="button" class="choice" data-group="preset" data-value="frontend-visual"><strong>Frontend visual</strong><small data-i18n="presetFrontend">Evidence-driven UI work</small></button><button type="button" class="choice" data-group="preset" data-value="backend"><strong>Backend</strong><small data-i18n="presetBackend">APIs, services and contracts</small></button></div></fieldset>
+        <fieldset><legend data-i18n="profileLabel">Execution profile</legend><div class="choice-grid profile-grid" id="profileChoices"><button type="button" class="choice" data-group="profile" data-value="economy"><strong>Economy</strong><small>M · M · H</small></button><button type="button" class="choice" data-group="profile" data-value="balanced"><strong>Balanced</strong><small>M · H · H</small></button><button type="button" class="choice" data-group="profile" data-value="quality"><strong>Quality</strong><small>H · H · H</small></button></div><p class="field-note" id="profileNote"></p></fieldset>
+        <fieldset><legend data-i18n="concurrencyLabel">Maximum subagent concurrency</legend><div class="number-choice" id="concurrencyChoices"><button type="button" data-group="concurrency" data-value="1"><b>1</b><span data-i18n="concurrencyOne">Conservative</span></button><button type="button" data-group="concurrency" data-value="2"><b>2</b><span data-i18n="concurrencyTwo">Moderate</span></button><button type="button" data-group="concurrency" data-value="3"><b>3</b><span data-i18n="concurrencyThree">Higher</span></button></div><p class="field-note" id="concurrencyNote"></p></fieldset>
       </form>
-
-      <aside class="preview-panel" aria-live="polite">
-        <div class="section-heading compact">
-          <span class="step">02</span>
-          <div>
-            <h2 data-i18n="previewTitle">Live configuration</h2>
-            <p data-i18n="previewBody">What Codex will load in this project.</p>
-          </div>
-        </div>
-
-        <div class="supervisor-card">
-          <div class="role-topline"><span class="role-dot supervisor"></span><span data-i18n="supervisor">Supervisor</span><em data-i18n="youChoose">you choose</em></div>
-          <strong data-i18n="supervisorRole">Plans · delegates · evaluates · stops</strong>
-        </div>
-
-        <div class="flow-line" aria-hidden="true"><span></span></div>
-
-        <div class="roles" id="rolesPreview">
-          <article class="role-card">
-            <div class="role-topline"><span class="role-dot explorer"></span><span>Explorer</span><em data-i18n="readOnly">read-only</em></div>
-            <strong>GPT-6 Luna · <span id="explorerEffort">medium</span></strong>
-            <p data-i18n="explorerRole">Targeted discovery and repository understanding.</p>
-          </article>
-          <article class="role-card worker-card">
-            <div class="role-topline"><span class="role-dot worker"></span><span>Worker</span><em data-i18n="writes">writes</em></div>
-            <strong>GPT-6 Luna · <span id="workerEffort">high</span></strong>
-            <p data-i18n="workerRole">Implementation, debugging, testing and validation.</p>
-          </article>
-          <article class="role-card">
-            <div class="role-topline"><span class="role-dot reviewer"></span><span>Reviewer</span><em data-i18n="readOnly">read-only</em></div>
-            <strong>GPT-6 Luna · <span id="reviewerEffort">high</span></strong>
-            <p data-i18n="reviewerRole">Independent verification and final quality gate.</p>
-          </article>
-        </div>
-
-        <div class="risk-row">
-          <div><span data-i18n="usageLabel">Relative model usage</span><strong id="usageLabel">Balanced</strong></div>
-          <div class="meter" aria-hidden="true"><span id="usageMeter"></span></div>
-        </div>
-      </aside>
+      <aside class="preview-panel" aria-live="polite"><div class="section-heading compact"><span class="step">02</span><div><h2 data-i18n="previewTitle">Live configuration</h2><p data-i18n="previewBody">What Codex will load in this project.</p></div></div><div class="supervisor-card"><div class="role-topline"><span class="role-dot supervisor"></span><span data-i18n="supervisor">Supervisor</span><em data-i18n="youChoose">you choose</em></div><strong data-i18n="supervisorRole">Plans · delegates · evaluates · stops</strong></div><div class="flow-line" aria-hidden="true"><span></span></div><div class="roles" id="rolesPreview"><article class="role-card"><div class="role-topline"><span class="role-dot explorer"></span><span>Explorer</span><em data-i18n="readOnly">read-only</em></div><strong>GPT-6 Luna · <span id="explorerEffort">medium</span></strong><p data-i18n="explorerRole">Targeted discovery and repository understanding.</p></article><article class="role-card worker-card"><div class="role-topline"><span class="role-dot worker"></span><span>Worker</span><em data-i18n="writes">writes</em></div><strong>GPT-6 Luna · <span id="workerEffort">high</span></strong><p data-i18n="workerRole">Implementation, debugging, testing and validation.</p></article><article class="role-card"><div class="role-topline"><span class="role-dot reviewer"></span><span>Reviewer</span><em data-i18n="readOnly">read-only</em></div><strong>GPT-6 Luna · <span id="reviewerEffort">high</span></strong><p data-i18n="reviewerRole">Independent verification and final quality gate.</p></article></div><div class="risk-row"><div><span data-i18n="usageLabel">Relative model usage</span><strong id="usageLabel">Balanced</strong></div><div class="meter" aria-hidden="true"><span id="usageMeter"></span></div></div></aside>
     </section>
-
-    <section class="shell command-section">
-      <div class="section-heading">
-        <span class="step">03</span>
-        <div>
-          <h2 data-i18n="commandTitle">Copy the command</h2>
-          <p data-i18n="commandBody">Preview first, then install the exact configuration you chose.</p>
-        </div>
-      </div>
-
-      <div class="terminal-card">
-        <div class="terminal-toolbar"><span></span><span></span><span></span><b id="terminalLabel">preview</b></div>
-        <pre><code id="commandOutput"></code></pre>
-        <div class="terminal-actions">
-          <button class="button primary" type="button" id="copyPreview" data-i18n="copyPreview">Copy preview</button>
-          <button class="button secondary" type="button" id="copyInstall" data-i18n="copyInstall">Copy install</button>
-          <button class="button text" type="button" id="copyShare" data-i18n="copyShare">Copy share link</button>
-        </div>
-        <p class="copy-status" id="copyStatus" role="status"></p>
-      </div>
-    </section>
-
-    <section class="shell details-band">
-      <div>
-        <h2 data-i18n="filesTitle">Six managed project files. Nothing global.</h2>
-        <p data-i18n="filesBody">The installer backs up managed conflicts and never changes <code>~/.codex</code>.</p>
-      </div>
-      <div class="file-list" aria-label="Managed files">
-        <code>.codex/config.toml</code>
-        <code>.codex/agents/explorer.toml</code>
-        <code>.codex/agents/worker.toml</code>
-        <code>.codex/agents/reviewer.toml</code>
-        <code>.codex/autopilot-kit.json</code>
-        <code>AUTOPILOT-GOAL.md</code>
-      </div>
-    </section>
-
-    <section class="shell safety">
-      <h2 data-i18n="safetyTitle">Designed to be inspectable.</h2>
-      <div class="safety-grid">
-        <article><strong data-i18n="safetyPreviewTitle">Preview before write</strong><p data-i18n="safetyPreviewBody"><code>--dry-run</code> and <code>diff</code> show intended changes without modifying the target.</p></article>
-        <article><strong data-i18n="safetyBackupTitle">Backups before replacement</strong><p data-i18n="safetyBackupBody">Managed conflicts are copied to a local backup directory before replacement.</p></article>
-        <article><strong data-i18n="safetyRolesTitle">Scoped roles</strong><p data-i18n="safetyRolesBody">Explorer and Reviewer remain read-only; nested subagents stay disabled.</p></article>
-      </div>
-    </section>
+    <section class="shell command-section"><div class="section-heading"><span class="step">03</span><div><h2 data-i18n="commandTitle">Copy the command</h2><p data-i18n="commandBody">Preview first, then install the exact configuration you chose from npm.</p></div></div><div class="terminal-card"><div class="terminal-toolbar"><span></span><span></span><span></span><b id="terminalLabel">npm · preview</b></div><pre><code id="commandOutput"></code></pre><div class="terminal-actions"><button class="button primary" type="button" id="copyPreview" data-i18n="copyPreview">Copy preview</button><button class="button secondary" type="button" id="copyInstall" data-i18n="copyInstall">Copy install</button><button class="button text" type="button" id="copyShare" data-i18n="copyShare">Copy share link</button></div><p class="copy-status" id="copyStatus" role="status"></p></div></section>
+    <section class="shell details-band"><div><h2 data-i18n="filesTitle">Six managed project files. Nothing global.</h2><p data-i18n="filesBody">The installer backs up managed conflicts and never changes <code>~/.codex</code>.</p></div><div class="file-list" aria-label="Managed files"><code>.codex/config.toml</code><code>.codex/agents/explorer.toml</code><code>.codex/agents/worker.toml</code><code>.codex/agents/reviewer.toml</code><code>.codex/autopilot-kit.json</code><code>AUTOPILOT-GOAL.md</code></div></section>
+    <section class="shell safety"><h2 data-i18n="safetyTitle">Designed to be inspectable.</h2><div class="safety-grid"><article><strong data-i18n="safetyPreviewTitle">Preview before write</strong><p data-i18n="safetyPreviewBody"><code>--dry-run</code> and <code>diff</code> show intended changes without modifying the target.</p></article><article><strong data-i18n="safetyBackupTitle">Backups before replacement</strong><p data-i18n="safetyBackupBody">Managed conflicts are copied to a local backup directory before replacement.</p></article><article><strong data-i18n="safetyRolesTitle">Scoped roles</strong><p data-i18n="safetyRolesBody">Explorer and Reviewer remain read-only; nested subagents stay disabled.</p></article></div></section>
   </main>
-
-  <footer class="shell footer">
-    <span>Codex Autopilot Kit</span>
-    <span data-i18n="footerText">Community project · MIT · Not affiliated with OpenAI</span>
-  </footer>
-
-  <script src="app.js" defer></script>
+  <footer class="shell footer"><span>Codex Autopilot Kit</span><span data-i18n="footerText">Community project · MIT · Not affiliated with OpenAI</span></footer>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

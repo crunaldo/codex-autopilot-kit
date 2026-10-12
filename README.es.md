@@ -2,9 +2,7 @@
   <img src="assets/brand/banner.svg" alt="Codex Autopilot Kit" width="100%" />
 </p>
 
-<p align="center">
-  <a href="README.md">English</a> · <strong>Español</strong>
-</p>
+<p align="center"><a href="README.md">English</a> · <strong>Español</strong></p>
 
 # Codex Autopilot Kit
 
@@ -15,37 +13,51 @@
 
 <p align="center">
   <a href="../../actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/crunaldo/codex-autopilot-kit/ci.yml?branch=main&label=CI" alt="CI" /></a>
+  <a href="https://www.npmjs.com/package/codex-autopilot-kit"><img src="https://img.shields.io/npm/v/codex-autopilot-kit" alt="npm" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licencia MIT" /></a>
-  <a href="docs/SAFETY.md"><img src="https://img.shields.io/badge/config-project--scoped-success" alt="Configuración aislada por proyecto" /></a>
   <a href="package.json"><img src="https://img.shields.io/badge/runtime_dependencies-0-success" alt="Cero dependencias de runtime" /></a>
 </p>
 
 Codex Autopilot Kit instala una pila `.codex/` probada y contratos Goal reutilizables dentro de un repositorio existente. Un supervisor planifica y evalúa mientras subagentes especializados exploran, implementan, prueban y revisan de forma independiente.
 
-No pretende reemplazar Codex, crear otro IDE ni convertirse en una plataforma pesada de orquestación. Es una capa de autopiloto pequeña y reversible para quienes ya quieren trabajar con Codex.
+No sustituye Codex, no crea otro IDE y no añade una plataforma pesada de orquestación. Es una capa de autopiloto ligera para quienes ya usan Codex y quieren más autonomía sin reemplazar su flujo.
 
 > Estrategia predeterminada: **Supervisor (tú eliges) → Explorer Luna Medium → Worker Luna High → Reviewer Luna High**, con concurrencia 1 por defecto.
 
-## Inicio recomendado: wizard interactivo
+## Configurador visual
+
+Configura la pila sin memorizar flags:
+
+**https://crunaldo.github.io/codex-autopilot-kit/**
+
+Elige preset de Goal, profile de ejecución y concurrencia máxima. El configurador muestra los roles resultantes, niveles de razonamiento, uso relativo de modelos, archivos administrados y los comandos exactos de preview e instalación. La URL conserva la configuración para poder compartirla.
+
+El configurador es estático y funciona del lado del cliente. No recibe el contenido de tu repositorio ni credenciales.
+
+## Inicio rápido
 
 Desde la raíz del proyecto objetivo:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit init --target .
+npx --yes codex-autopilot-kit init --target .
 ```
 
-El wizard permite elegir:
-
-- **preset**: `generic`, `frontend-visual` o `backend`;
-- **profile**: `economy`, `balanced` o `quality`;
-- **concurrency**: `1`, `2` o `3`.
-
-Antes de escribir cualquier archivo muestra un resumen completo y pide confirmación. La concurrencia `1` es la opción conservadora recomendada.
-
-Para CI, scripts o instalación realizada por otro agente:
+O previsualiza una configuración completa antes de escribir:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit init \
+npx --yes codex-autopilot-kit init \
+  --target . \
+  --preset generic \
+  --profile balanced \
+  --concurrency 1 \
+  --yes \
+  --dry-run
+```
+
+Después instala:
+
+```bash
+npx --yes codex-autopilot-kit init \
   --target . \
   --preset generic \
   --profile balanced \
@@ -53,112 +65,11 @@ npx --yes github:crunaldo/codex-autopilot-kit init \
   --yes
 ```
 
-Todo el wizard utiliza únicamente módulos estándar de Node.js. El paquete mantiene **0 dependencias de runtime**.
-
-## Inspecciona antes de instalar
-
-### Dry run
+GitHub sigue siendo la fuente canónica y puede usarse directamente como fallback:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit install \
-  --target . \
-  --profile balanced \
-  --preset generic \
-  --concurrency 1 \
-  --dry-run
+npx --yes github:crunaldo/codex-autopilot-kit init --target .
 ```
-
-El preview clasifica cada archivo como:
-
-```text
-CREATE     archivo nuevo
-REPLACE    archivo existente que cambiaría
-UNCHANGED  archivo que ya coincide
-UPDATE     .gitignore si necesita la regla de backups
-```
-
-No escribe archivos, no crea backups y nunca toca `~/.codex`.
-
-El wizard también acepta `--dry-run`:
-
-```bash
-npx --yes github:crunaldo/codex-autopilot-kit init \
-  --target . \
-  --preset frontend-visual \
-  --profile balanced \
-  --concurrency 1 \
-  --yes \
-  --dry-run
-```
-
-### Diff
-
-Para ver exactamente qué cambiaría:
-
-```bash
-npx --yes github:crunaldo/codex-autopilot-kit diff --target .
-```
-
-Si el kit ya está instalado, `diff` usa por defecto el preset, profile y concurrencia actuales. También puedes comparar contra otra configuración sin escribir nada:
-
-```bash
-npx --yes github:crunaldo/codex-autopilot-kit diff \
-  --target . \
-  --profile quality \
-  --preset backend \
-  --concurrency 2
-```
-
-## Flujo visual rápido
-
-<p align="center">
-  <img src="assets/brand/demo-flow.svg" alt="Flujo install, doctor y goal" width="100%" />
-</p>
-
-El camino corto es: configura con `init`, inspecciona con `--dry-run` o `diff`, instala, ejecuta `doctor` y luego inicia el Goal en un chat nuevo de Codex.
-
-## Arquitectura
-
-<p align="center">
-  <img src="assets/brand/architecture.svg" alt="Arquitectura de Codex Autopilot Kit" width="100%" />
-</p>
-
-Los roles se separan intencionalmente:
-
-- **Supervisor** — planificación, evaluación, escalamiento y decisión final.
-- **Explorer** — descubrimiento puntual en solo lectura.
-- **Worker** — implementación, debugging y pruebas.
-- **Reviewer** — revisión final independiente en solo lectura.
-
-Explorer y Reviewer no necesitan permisos de escritura; Worker recibe la tarea concreta; el Supervisor conserva la decisión de continuar, corregir, marcar PASS o declarar BLOCKED.
-
-## Qué optimiza
-
-| Principio | Enfoque del kit |
-|---|---|
-| Mantener la herramienta existente | Añade estructura **a Codex** en lugar de reemplazarlo |
-| Aislamiento | La configuración vive dentro del repositorio |
-| Delegación predecible | Roles explícitos Explorer / Worker / Reviewer |
-| Autonomía conservadora | Concurrencia 1 por defecto |
-| Instalación inspeccionable | `init`, `--dry-run`, `diff`, backups y manifest |
-| Ejecución consciente del costo | Supervisor fuerte + subagentes acotados |
-| Flujos reutilizables | Goal presets especializados |
-| Bajo peso operativo | Cero dependencias de runtime y sin servicios ocultos |
-
-## Posicionamiento
-
-Codex Autopilot Kit es deliberadamente más pequeño que una plataforma completa de agentes u orquestación. Está pensado para quienes ya usan Codex y quieren añadir autonomía multiagente sin sustituir su entorno.
-
-| Herramienta | Enfoque típico |
-|---|---|
-| **Codex Autopilot Kit** | Añadir autonomía multiagente estructurada a un proyecto Codex existente |
-| Ralph Orchestrator | Flujos más amplios de orquestación autónoma |
-| OpenHands | Plataforma completa de agentes y entornos de ejecución |
-| OpenCode | Experiencia independiente de agente de programación |
-| Open Ralph Wiggum | Loop iterativo ligero sobre agentes existentes |
-| Awesome Agent Orchestrators | Directorio de referencia y descubrimiento |
-
-El objetivo no es sustituir esas categorías. Es hacer que un proyecto Codex existente sea más autónomo sin tomar control del flujo completo.
 
 ## Qué instala
 
@@ -174,74 +85,62 @@ El objetivo no es sustituir esas categorías. Es hacer que un proyecto Codex exi
 AUTOPILOT-GOAL.md
 ```
 
-Los archivos administrados se respaldan antes de ser reemplazados. Una instalación que ya coincide es idempotente: no reescribe archivos ni crea backups innecesarios.
+Los conflictos administrados se respaldan antes de ser reemplazados. Una reinstalación que ya coincide es idempotente y no crea backups innecesarios.
 
-## Instalación directa
+## Inspecciona antes de instalar
 
-El comando de bajo nivel sigue disponible:
+Dry run:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit install \
+npx --yes codex-autopilot-kit install \
   --target . \
   --profile balanced \
   --preset generic \
-  --concurrency 1
+  --concurrency 1 \
+  --dry-run
 ```
 
-Para frontend/visual:
+Diff exacto:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit install \
-  --target . \
-  --profile balanced \
-  --preset frontend-visual \
-  --concurrency 1
+npx --yes codex-autopilot-kit diff --target .
 ```
 
-Si existe un `.codex/config.toml` no administrado, la instalación normal se detiene. Usa primero `diff` o `--dry-run`; `--force` solo debe usarse cuando realmente quieras respaldarlo y sustituir los paths administrados.
-
-## Verificación
+Diff consumible por máquinas:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit doctor --target .
+npx --yes codex-autopilot-kit diff --target . --json
 ```
 
-Doctor valida archivos requeridos, UTF-8 estricto, registro de roles, modelos, Explorer/Reviewer en solo lectura, bloqueo de agentes anidados, concurrencia y manifest.
+El preview clasifica los archivos como `CREATE`, `REPLACE` o `UNCHANGED`, e informa por separado si `.gitignore` necesita actualización. `--dry-run` y `diff` no escriben archivos.
 
-Salida consumible por CI/agentes:
+## Verifica
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit doctor --target . --json
+npx --yes codex-autopilot-kit doctor --target .
 ```
 
-El JSON incluye `schemaVersion`, `command`, `pass`, `target`, `kitVersion` y los checks individuales.
-
-## Estado
+Para CI y agentes:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit status --target .
+npx --yes codex-autopilot-kit doctor --target . --json
+npx --yes codex-autopilot-kit status --target . --json
 ```
 
-También en JSON:
+Doctor valida archivos requeridos, UTF-8 estricto, registro de roles, modelos esperados, Explorer/Reviewer en solo lectura, agentes anidados deshabilitados, concurrencia y manifest local.
 
-```bash
-npx --yes github:crunaldo/codex-autopilot-kit status --target . --json
-```
+## Arquitectura
 
-Cuando el kit no está instalado, el modo JSON devuelve un objeto estructurado con `installed: false` y código de salida `2`.
+<p align="center">
+  <img src="assets/brand/architecture.svg" alt="Arquitectura de Codex Autopilot Kit" width="100%" />
+</p>
 
-## Iniciar un Goal autónomo
+- **Supervisor** — planificación, delegación, evaluación, escalamiento y decisión final.
+- **Explorer** — descubrimiento puntual en solo lectura.
+- **Worker** — implementación, debugging, pruebas y validación.
+- **Reviewer** — revisión final independiente en solo lectura.
 
-Después de instalar o actualizar, abre un **chat nuevo de Codex** para recargar la configuración local. Selecciona tu supervisor y usa:
-
-```text
-/goal Lee AUTOPILOT-GOAL.md y completa de forma autónoma el objetivo siguiente. Respeta sus roles, reglas de seguridad, condiciones de parada y verificaciones. No esperes instrucciones mías entre iteraciones salvo que estés realmente BLOCKED.
-
-OBJETIVO:
-<describe aquí el resultado concreto>
-```
-
-En Goals largos define criterios PASS/FAIL medibles en lugar de instrucciones vagas como “sigue mejorando”.
+El usuario selecciona el modelo Supervisor; el kit configura los roles locales del proyecto.
 
 ## Profiles
 
@@ -249,9 +148,9 @@ En Goals largos define criterios PASS/FAIL medibles en lugar de instrucciones va
 |---|---:|---:|---:|---|
 | `economy` | medium | medium | high | trabajo repetitivo o bien acotado |
 | `balanced` | medium | high | high | **predeterminado; trabajo real de proyecto** |
-| `quality` | high | high | high | repos difíciles con mayor necesidad de exploración |
+| `quality` | high | high | high | repositorios difíciles o con mucha exploración |
 
-Ningún profile activa `max` automáticamente.
+Ningún profile activa razonamiento máximo automáticamente.
 
 ## Goal presets
 
@@ -265,16 +164,21 @@ Ningún profile activa `max` automáticamente.
 codex-autopilot init       Wizard de configuración e instalación
 codex-autopilot install    Instalar/actualizar la pila del proyecto
 codex-autopilot diff       Comparar estado actual con configuración deseada
-codex-autopilot doctor     Validar archivos, roles y manifest
+codex-autopilot doctor     Validar archivos, roles, concurrencia y manifest
 codex-autopilot status     Mostrar profile/preset/concurrencia/versión
-codex-autopilot uninstall  Eliminar archivos administrados; backup opcional
+codex-autopilot uninstall  Eliminar archivos administrados; restauración opcional
 codex-autopilot print-goal Imprimir un Goal preset
 ```
 
-Ayuda:
+## Iniciar un Goal autónomo
 
-```bash
-npx --yes github:crunaldo/codex-autopilot-kit --help
+Después de instalar o actualizar, abre un **chat nuevo de Codex** para recargar la configuración local. Selecciona el Supervisor y usa el contrato instalado `AUTOPILOT-GOAL.md`:
+
+```text
+/goal Lee AUTOPILOT-GOAL.md y completa de forma autónoma el objetivo siguiente. Respeta sus roles, reglas de seguridad, verificaciones y contrato PASS/BLOCKED. No esperes instrucciones mías entre iteraciones salvo que estés realmente BLOCKED.
+
+OBJETIVO:
+<tu objetivo concreto>
 ```
 
 ## Modelo de seguridad
@@ -289,39 +193,26 @@ El kit es deliberadamente conservador:
 - no levanta servicios ocultos;
 - concurrencia 1 por defecto;
 - Explorer y Reviewer son solo lectura;
-- `--dry-run` y `diff` permiten inspección sin escritura.
+- `--dry-run` y `diff` son solo inspección.
 
 Consulta [SAFETY.md](docs/SAFETY.md) antes de ejecutar Goals desatendidos en repositorios valiosos.
 
-## Supervisor
-
-El kit no fuerza el modelo padre. Selecciónalo en Codex al comenzar la ejecución.
-
-Con un bridge compatible, el patrón probado ha sido:
-
-```text
-GPT-5.6 Sol (Web) High  -> supervisor
-GPT-6 Luna Medium       -> explorer
-GPT-6 Luna High         -> worker
-GPT-6 Luna High         -> reviewer
-```
-
-El bridge `codex-chatgpt-web` es opcional, externo al proyecto y nunca se instala silenciosamente. Consulta [MODEL_STRATEGY.md](docs/MODEL_STRATEGY.md) y [BRIDGE_SETUP.md](docs/BRIDGE_SETUP.md).
-
 ## Documentación
 
+- [Configurador visual](https://crunaldo.github.io/codex-autopilot-kit/)
 - [Primeros pasos](docs/GETTING_STARTED.md)
+- [Instalación para agentes](INSTALL_FOR_AGENTS.md)
 - [Arquitectura](docs/ARCHITECTURE.md)
 - [Estrategia de modelos](docs/MODEL_STRATEGY.md)
 - [Goal playbook](docs/GOAL_PLAYBOOK.md)
 - [Seguridad](docs/SAFETY.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
-- [Bridge opcional](docs/BRIDGE_SETUP.md)
-- [Field notes](docs/field-notes/2026-10.md)
+- [Distribución](docs/DISTRIBUTION.md)
+- [Roadmap](ROADMAP.md)
 
 ## Estado del proyecto
 
-Consulta [ROADMAP.md](ROADMAP.md) para las siguientes mejoras.
+`v0.3.0` está publicado en npm y GitHub Releases. v0.4 corresponde al track del Configurador Visual; consulta [CHANGELOG.md](CHANGELOG.md) y [ROADMAP.md](ROADMAP.md).
 
 Codex Autopilot Kit es un proyecto comunitario y no está afiliado ni respaldado por OpenAI. Los nombres de productos y marcas pertenecen a sus respectivos titulares.
 

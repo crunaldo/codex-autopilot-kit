@@ -8,12 +8,24 @@
 
 Optional: a compatible ChatGPT Web bridge if you want a Web model as the parent supervisor.
 
-## Recommended setup: interactive wizard
+## Visual setup
+
+Open the public configurator:
+
+```text
+https://crunaldo.github.io/codex-autopilot-kit/
+```
+
+Choose a Goal preset, execution profile, and maximum subagent concurrency. The URL preserves those choices so the configuration can be shared. Use **Copy preview** first, inspect the dry run, then use **Copy install**.
+
+The configurator is static, client-side, and does not receive your repository contents or credentials.
+
+## Recommended CLI setup: interactive wizard
 
 From your target project root:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit init --target .
+npx --yes codex-autopilot-kit init --target .
 ```
 
 The wizard lets you choose:
@@ -28,12 +40,18 @@ The wizard uses only Node.js standard-library modules and adds no runtime depend
 
 If the project already contains an unmanaged `.codex/config.toml`, `init` asks before backing it up and replacing kit-managed paths. Declining leaves the project unchanged.
 
+GitHub-source fallback:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit init --target .
+```
+
 ## Non-interactive setup
 
 For CI, scripts, or agent-driven setup, provide all choices explicitly and add `--yes`:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes
+npx --yes codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes
 ```
 
 A non-interactive `init` without the required choices fails instead of waiting for input.
@@ -43,7 +61,7 @@ A non-interactive `init` without the required choices fails instead of waiting f
 Use the installer dry run to classify the planned changes:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset generic --concurrency 1 --dry-run
+npx --yes codex-autopilot-kit install --target . --profile balanced --preset generic --concurrency 1 --dry-run
 ```
 
 The output reports `CREATE`, `REPLACE`, and `UNCHANGED` for managed files and `UPDATE` for `.gitignore` when needed. It does not write files or create backups.
@@ -51,25 +69,25 @@ The output reports `CREATE`, `REPLACE`, and `UNCHANGED` for managed files and `U
 `init` also supports `--dry-run`:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes --dry-run
+npx --yes codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes --dry-run
 ```
 
 ## Inspect exact changes with diff
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit diff --target .
+npx --yes codex-autopilot-kit diff --target .
 ```
 
 On an installed project, omitted profile/preset/concurrency values are taken from the current manifest. To inspect a proposed change:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit diff --target . --profile quality --preset backend --concurrency 2
+npx --yes codex-autopilot-kit diff --target . --profile quality --preset backend --concurrency 2
 ```
 
 Machine-readable summary:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit diff --target . --json
+npx --yes codex-autopilot-kit diff --target . --json
 ```
 
 `diff` never writes files.
@@ -79,7 +97,7 @@ npx --yes github:crunaldo/codex-autopilot-kit diff --target . --json
 The lower-level installer remains available:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset generic --concurrency 1
+npx --yes codex-autopilot-kit install --target . --profile balanced --preset generic --concurrency 1
 ```
 
 For frontend/visual work use `--preset frontend-visual`; for services use `--preset backend`.
@@ -91,7 +109,7 @@ An install that already matches the requested state is idempotent and does not c
 ## Verify
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit doctor --target .
+npx --yes codex-autopilot-kit doctor --target .
 ```
 
 Doctor checks expected files, strict UTF-8, role registration, Luna role models, read-only explorer/reviewer, disabled nested agents, configured concurrency, and the installer manifest.
@@ -99,7 +117,7 @@ Doctor checks expected files, strict UTF-8, role registration, Luna role models,
 For CI or agents:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit doctor --target . --json
+npx --yes codex-autopilot-kit doctor --target . --json
 ```
 
 The JSON envelope contains `schemaVersion`, `command`, `pass`, `target`, `kitVersion`, and individual check results.
@@ -107,13 +125,13 @@ The JSON envelope contains `schemaVersion`, `command`, `pass`, `target`, `kitVer
 ## Read installation status
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit status --target .
+npx --yes codex-autopilot-kit status --target .
 ```
 
 Machine-readable status:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit status --target . --json
+npx --yes codex-autopilot-kit status --target . --json
 ```
 
 If the target has no managed installation, JSON status returns `installed: false` and exits with code `2`.
@@ -155,11 +173,11 @@ Run `init` again to choose a new preset/profile/concurrency interactively, or in
 ## Remove
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit uninstall --target .
+npx --yes codex-autopilot-kit uninstall --target .
 ```
 
 Restore the latest managed-file backup with:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit uninstall --target . --restore-latest
+npx --yes codex-autopilot-kit uninstall --target . --restore-latest
 ```
