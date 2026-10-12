@@ -12,6 +12,7 @@ function run(args, cwd=root) {
 }
 function assert(cond, msg) { if (!cond) throw new Error(msg); }
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-kit-'));
+const initTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-init-'));
 try {
   fs.writeFileSync(path.join(tmp, '.gitignore'), 'node_modules/\n');
   run(['install','--target',tmp,'--profile','balanced','--preset','frontend-visual']);
@@ -27,5 +28,20 @@ try {
   assert(worker2.includes('model_reasoning_effort = "medium"'), 'economy worker must be medium');
   const backups = path.join(tmp,'.codex-autopilot-backups');
   assert(fs.existsSync(backups) && fs.readdirSync(backups).length >= 1, 'backup not created on update');
-  console.log('PASS: install, update, profile replacement, backup, preset, and doctor tests.');
-} finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+
+  const initOut = run(['init','--target',initTmp,'--preset','backend','--profile','quality','--concurrency','2','--yes']);
+  assert(initOut.includes('Configuration summary'), 'init summary missing');
+  assert(initOut.includes('Concurrency  2'), 'init concurrency summary missing');
+  const initConfig = fs.readFileSync(path.join(initTmp,'.codex','config.toml'),'utf8');
+  assert(initConfig.includes('max_concurrent_threads_per_session = 2'), 'init did not render concurrency');
+  const initManifest = JSON.parse(fs.readFileSync(path.join(initTmp,'.codex','autopilot-kit.json'),'utf8'));
+  assert(initManifest.preset === 'backend', 'init preset missing from manifest');
+  assert(initManifest.profile === 'quality', 'init profile missing from manifest');
+  assert(initManifest.concurrency === 2, 'init concurrency missing from manifest');
+  run(['doctor','--target',initTmp]);
+
+  console.log('PASS: install, init, concurrency, update, profile replacement, backup, preset, and doctor tests.');
+} finally {
+  fs.rmSync(tmp, { recursive: true, force: true });
+  fs.rmSync(initTmp, { recursive: true, force: true });
+}
