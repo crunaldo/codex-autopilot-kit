@@ -3,27 +3,94 @@ name: Release package
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      publish_npm:
+        description: 'Publish the validated package to npm'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
-  release:
+  validate:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm test
-      - run: npm run verify
-      - name: Build archives
+          registry-url: 'https://registry.npmjs.org'
+      - name: Validate package
+        run: npm run release:check
+      - name: Validate tag against package version
+        id: meta
+        shell: bash
         run: |
-          mkdir -p release
-          git archive --format=zip --output=release/codex-autopilot-kit-${GITHUB_REF_NAME}.zip HEAD
-          git archive --format=tar.gz --output=release/codex-autopilot-kit-${GITHUB_REF_NAME}.tar.gz HEAD
-      - uses: softprops/action-gh-release@v2
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v${VERSION}"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" && "${GITHUB_REF_NAME}" != "${TAG}" ]]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package version ${VERSION}" >&2
+            exit 1
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+      - name: Build npm tarball and checksum
+        shell: bash
+        run: |
+          TARBALL=$(npm pack --json | node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>console.log(JSON.parse(s)[0].filename))")
+          sha256sum "$TARBALL" > "$TARBALL.sha256"
+      - name: Upload validated artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: release/*
-          generate_release_notes: true
+          name: codex-autopilot-kit-${{ steps.meta.outputs.version }}
+          path: |
+            codex-autopilot-kit-*.tgz
+            codex-autopilot-kit-*.tgz.sha256
+
+  github-release:
+    needs: validate
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: codex-autopilot-kit-${{ needs.validate.outputs.version }}
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if gh release view "${{ needs.validate.outputs.tag }}" >/dev/null 2>&1; then
+            gh release upload "${{ needs.validate.outputs.tag }}" codex-autopilot-kit-*.tgz codex-autopilot-kit-*.tgz.sha256 --clobber
+          else
+            gh release create "${{ needs.validate.outputs.tag }}" \
+              codex-autopilot-kit-*.tgz \
+              codex-autopilot-kit-*.tgz.sha256 \
+              --title "Codex Autopilot Kit ${{ needs.validate.outputs.tag }}" \
+              --generate-notes
+          fi
+
+  npm-publish:
+    needs: validate
+    if: vars.NPM_PUBLISH == 'true' || inputs.publish_npm == true
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - name: Publish with provenance
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
