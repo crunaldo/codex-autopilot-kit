@@ -37,5 +37,13 @@ const appSource = fs.readFileSync(path.join(root,'configurator/app.js'),'utf8');
 try { new Function(appSource); } catch (error) { console.error(`configurator/app.js syntax error: ${error.message}`); failed = true; }
 const pagesWorkflow = fs.readFileSync(path.join(root,'.github/workflows/pages.yml'),'utf8');
 if (!pagesWorkflow.includes('enablement: true')) { console.error('Pages workflow must enable the Pages site when absent'); failed = true; }
+const releaseWorkflow = fs.readFileSync(path.join(root,'.github/workflows/release.yml'),'utf8');
+if (!releaseWorkflow.includes('npm stage publish --provenance --access public')) { console.error('release workflow must use npm staged publishing'); failed = true; }
+if (!releaseWorkflow.includes('NPM_STAGE_TOKEN')) { console.error('release workflow must use the dedicated NPM_STAGE_TOKEN secret'); failed = true; }
+if (releaseWorkflow.split(/\r?\n/).some(line => /^\s*(run:\s*)?npm publish(?:\s|$)/.test(line))) { console.error('direct npm publish is forbidden in release workflow'); failed = true; }
+if (releaseWorkflow.includes('npm stage approve')) {
+  const executableApproval = releaseWorkflow.split(/\r?\n/).some(line => /^\s*(run:\s*)?npm stage approve(?:\s|$)/.test(line));
+  if (executableApproval) { console.error('automated npm stage approval is forbidden'); failed = true; }
+}
 if (failed) process.exit(1);
-console.log(`PASS: v${pkg.version}; ${required.length} required files present, valid UTF-8, zero runtime dependencies, npm distribution metadata and configurator surface valid.`);
+console.log(`PASS: v${pkg.version}; ${required.length} required files present, valid UTF-8, zero runtime dependencies, staged npm distribution policy and configurator surface valid.`);
