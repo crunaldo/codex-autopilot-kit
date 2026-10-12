@@ -4,7 +4,7 @@
 
 - GitHub Release `v0.4.0` includes the package tarball and its `.sha256` checksum.
 - npm `latest` is `0.4.0`.
-- GitHub repository About description, website, and topics are still unset.
+- GitHub repository About metadata is set: project description, GitHub Pages website, and eight discovery topics (`codex`, `ai-agents`, `multi-agent`, `agent-orchestration`, `developer-tools`, `automation`, `cli`, `openai`).
 - The [Awesome Agent Orchestrators submission](https://github.com/andyrewlee/awesome-agent-orchestrators/pull/293) is open and awaiting maintainer review.
 
 ## In progress — v0.5 Make it measurable
