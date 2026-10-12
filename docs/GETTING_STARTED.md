@@ -38,6 +38,42 @@ npx --yes github:crunaldo/codex-autopilot-kit init --target . --preset generic -
 
 A non-interactive `init` without the required choices fails instead of waiting for input.
 
+## Preview without changing files
+
+Use the installer dry run to classify the planned changes:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset generic --concurrency 1 --dry-run
+```
+
+The output reports `CREATE`, `REPLACE`, and `UNCHANGED` for managed files and `UPDATE` for `.gitignore` when needed. It does not write files or create backups.
+
+`init` also supports `--dry-run`:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes --dry-run
+```
+
+## Inspect exact changes with diff
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit diff --target .
+```
+
+On an installed project, omitted profile/preset/concurrency values are taken from the current manifest. To inspect a proposed change:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit diff --target . --profile quality --preset backend --concurrency 2
+```
+
+Machine-readable summary:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit diff --target . --json
+```
+
+`diff` never writes files.
+
 ## Direct install
 
 The lower-level installer remains available:
@@ -48,7 +84,9 @@ npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balan
 
 For frontend/visual work use `--preset frontend-visual`; for services use `--preset backend`.
 
-If the project already contains an unmanaged `.codex/config.toml`, direct installation stops. Review it first and use `--force` only when you intentionally want the kit to back it up and replace managed paths.
+If the project already contains an unmanaged `.codex/config.toml`, direct installation stops. Review it first with `diff` or `--dry-run`; use `--force` only when you intentionally want the kit to back it up and replace managed paths.
+
+An install that already matches the requested state is idempotent and does not create unnecessary backups.
 
 ## Verify
 
@@ -57,6 +95,28 @@ npx --yes github:crunaldo/codex-autopilot-kit doctor --target .
 ```
 
 Doctor checks expected files, strict UTF-8, role registration, Luna role models, read-only explorer/reviewer, disabled nested agents, configured concurrency, and the installer manifest.
+
+For CI or agents:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit doctor --target . --json
+```
+
+The JSON envelope contains `schemaVersion`, `command`, `pass`, `target`, `kitVersion`, and individual check results.
+
+## Read installation status
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit status --target .
+```
+
+Machine-readable status:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit status --target . --json
+```
+
+If the target has no managed installation, JSON status returns `installed: false` and exits with code `2`.
 
 ## Start Codex
 
@@ -90,7 +150,7 @@ Track start/end 5-hour quota, start/end weekly quota, duration, worker/reviewer 
 
 ## Update
 
-Run `init` again to choose a new preset/profile/concurrency interactively, or run `install` with explicit options. Managed files are backed up first.
+Run `init` again to choose a new preset/profile/concurrency interactively, or inspect the proposed change with `diff` before running `install`. Managed replacements are backed up first.
 
 ## Remove
 
