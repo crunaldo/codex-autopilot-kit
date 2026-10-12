@@ -1,6 +1,6 @@
 # Roadmap
 
-## Release candidate — v0.4 Visual Configurator
+## v0.4 Visual Configurator
 
 - Static client-side configurator under `configurator/`.
 - Preset, profile, and concurrency selectors with live role preview.
@@ -13,7 +13,7 @@
 - Pure configurator core separated from DOM behavior for deterministic testing.
 - Automated coverage for all 54 preset × profile × concurrency × language combinations.
 - Package homepage points to the visual configurator.
-- Remaining release gate: PR CI + final rendered browser QA before tagging `v0.4.0`.
+- Rendered browser QA passed on desktop and mobile: presets, profiles, concurrency, EN/ES, URL state, copy confirmations, responsive layout, and console.
 
 ## Completed — v0.3 Distribution & Discovery
 

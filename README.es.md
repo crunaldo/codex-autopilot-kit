@@ -212,7 +212,7 @@ Consulta [SAFETY.md](docs/SAFETY.md) antes de ejecutar Goals desatendidos en rep
 
 ## Estado del proyecto
 
-`v0.3.0` está publicado en npm y GitHub Releases. v0.4 corresponde al track del Configurador Visual; consulta [CHANGELOG.md](CHANGELOG.md) y [ROADMAP.md](ROADMAP.md).
+La versión v0.4.0 se centra en el Configurador Visual y la instalación desde npm; consulta [CHANGELOG.md](CHANGELOG.md) y [ROADMAP.md](ROADMAP.md) para ver los detalles del release.
 
 Codex Autopilot Kit es un proyecto comunitario y no está afiliado ni respaldado por OpenAI. Los nombres de productos y marcas pertenecen a sus respectivos titulares.
 

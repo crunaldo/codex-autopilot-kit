@@ -122,7 +122,7 @@ After installation, start a NEW Codex chat so project-local configuration reload
 
 ## Distribution
 
-`codex-autopilot-kit@0.3.0` is published on npm and is the current `latest` release. GitHub remains the canonical source repository. npm release automation uses staged publishing with provenance and a manual approval boundary.
+The unscoped `codex-autopilot-kit` package is published on npm; query the registry for the current `latest` version. GitHub remains the canonical source repository. npm release automation uses staged publishing with provenance and a manual approval boundary.
 
 ## Project identity
 

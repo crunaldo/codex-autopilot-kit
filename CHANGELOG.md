@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — v0.4.0
+## 0.4.0 — 2026-10-12
 
 ### Visual Configurator
 
