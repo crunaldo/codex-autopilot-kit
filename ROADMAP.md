@@ -1,5 +1,15 @@
 # Roadmap
 
+## Completed — v0.3 Distribution & Discovery
+
+- Root-level `llms.txt` for machine-readable project discovery.
+- Deterministic `INSTALL_FOR_AGENTS.md` installation contract for coding agents and CI.
+- npm-ready package metadata, public publish configuration, provenance, and release checks.
+- Tag-driven GitHub Release workflow with validated tarball + SHA-256 checksum artifacts.
+- Opt-in npm publication path using Trusted Publishing or `NPM_TOKEN`.
+- Distribution/discovery playbook with release checklist and recommended repository metadata.
+- Prepared Awesome Agent Orchestrators submission copy and acceptance-gate tracking.
+
 ## Completed — v0.2 Effortless setup
 
 - Interactive `codex-autopilot init` wizard.
@@ -14,15 +24,18 @@
 
 ## Near term
 
+- Static client-side configurator for GitHub Pages.
 - More installer merge strategies for pre-existing `.codex/config.toml` files.
 - Machine-readable run telemetry helper.
 - Additional presets for monorepos and data/ML projects.
 - Automated compatibility checks against new Codex agent configuration versions.
-- Static client-side configurator for GitHub Pages.
+- Publish the first npm version once npm Trusted Publishing or a publishing token is configured.
+- Submit to Awesome Agent Orchestrators after the project's adoption threshold is met.
 
 ## Later
 
-- Signed release artifacts.
-- npm publication when release/distribution workflow is ready.
+- Signed release artifacts beyond SHA-256 checksums.
+- Reproducible benchmark suite and local run receipts.
+- Autopilot readiness scoring and richer compatibility diagnostics.
 
 The project will not silently install third-party browser bridges or modify global Codex configuration.
