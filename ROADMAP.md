@@ -1,5 +1,12 @@
 # Roadmap
 
+## v0.4 Make it visible — released; visibility follow-ups remain
+
+- GitHub Release `v0.4.0` includes the package tarball and its `.sha256` checksum.
+- npm `latest` is `0.4.0`.
+- GitHub repository About description, website, and topics are still unset.
+- The [Awesome Agent Orchestrators submission](https://github.com/andyrewlee/awesome-agent-orchestrators/pull/293) is open and awaiting maintainer review.
+
 ## In progress — v0.5 Make it measurable
 
 - Run receipts and local telemetry: implemented; records are explicit, local, and exclude Goal text and tokens.
