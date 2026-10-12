@@ -91,7 +91,10 @@ jobs:
           node-version: '22.22.2'
           registry-url: 'https://registry.npmjs.org'
       - name: Install npm with staged-publishing support
-        run: npm install --global npm@12.2.0
+        shell: bash
+        run: |
+          npm install --global npm@12.2.0 --prefix "$RUNNER_TEMP/npm-stage-cli"
+          echo "$RUNNER_TEMP/npm-stage-cli/bin" >> "$GITHUB_PATH"
       - name: Verify staged-publishing toolchain
         shell: bash
         run: |
