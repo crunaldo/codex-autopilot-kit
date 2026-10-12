@@ -7,7 +7,7 @@
     "codex-autopilot": "./bin/codex-autopilot.mjs"
   },
   "scripts": {
-    "test": "node scripts/test.mjs",
+    "test": "node scripts/test.mjs && node scripts/test-configurator.mjs",
     "verify": "node scripts/verify-package.mjs",
     "doctor": "node bin/codex-autopilot.mjs doctor --target .",
     "release:check": "npm test && npm run verify && npm pack --dry-run",
@@ -37,7 +37,7 @@
   "bugs": {
     "url": "https://github.com/crunaldo/codex-autopilot-kit/issues"
   },
-  "homepage": "https://github.com/crunaldo/codex-autopilot-kit#readme",
+  "homepage": "https://crunaldo.github.io/codex-autopilot-kit/",
   "publishConfig": {
     "access": "public",
     "provenance": true
