@@ -13,6 +13,22 @@ Install or update Codex Autopilot Kit inside the current repository without modi
 - The repository may already contain `.codex/` files; treat unmanaged configuration conservatively.
 - Do not assume permission to overwrite unmanaged `.codex/config.toml`.
 
+## Distribution source
+
+Prefer the published npm package for normal installation:
+
+```text
+codex-autopilot-kit
+```
+
+GitHub remains the canonical source and fallback:
+
+```text
+github:crunaldo/codex-autopilot-kit
+```
+
+The public visual configurator is available at `https://crunaldo.github.io/codex-autopilot-kit/` and produces the same supported configuration tuple: preset, profile, concurrency, and language for the UI only.
+
 ## Default configuration
 
 Use these defaults unless the user or repository context explicitly requires another supported option:
@@ -24,10 +40,8 @@ concurrency  1
 ```
 
 Supported presets: `generic`, `frontend-visual`, `backend`.
-
 Supported profiles: `economy`, `balanced`, `quality`.
-
-Supported concurrency: `1`, `2`, `3`. Prefer `1` unless the user explicitly wants parallel subagents.
+Supported concurrency: `1`, `2`, `3`. Prefer `1` unless the user explicitly wants a higher maximum thread cap.
 
 ## Required sequence
 
@@ -36,7 +50,7 @@ Supported concurrency: `1`, `2`, `3`. Prefer `1` unless the user explicitly want
 Run a no-write preview first:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit init \
+npx --yes codex-autopilot-kit init \
   --target . \
   --preset generic \
   --profile balanced \
@@ -50,7 +64,7 @@ The command must not change project files.
 ### 2. Inspect the desired diff
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit diff \
+npx --yes codex-autopilot-kit diff \
   --target . \
   --preset generic \
   --profile balanced \
@@ -62,14 +76,12 @@ Check `changed`, each managed file status, and the `.gitignore` status.
 
 ### 3. Handle unmanaged `.codex/config.toml`
 
-If an unmanaged `.codex/config.toml` exists, do **not** add `--force` automatically.
-
-Only use `--force` after explicit authorization to back up and replace kit-managed paths.
+If an unmanaged `.codex/config.toml` exists, do **not** add `--force` automatically. Only use `--force` after explicit authorization to back up and replace kit-managed paths.
 
 ### 4. Install
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit init \
+npx --yes codex-autopilot-kit init \
   --target . \
   --preset generic \
   --profile balanced \
@@ -80,7 +92,7 @@ npx --yes github:crunaldo/codex-autopilot-kit init \
 ### 5. Verify
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit doctor --target . --json
+npx --yes codex-autopilot-kit doctor --target . --json
 ```
 
 Require `pass: true` before reporting success.
@@ -88,10 +100,14 @@ Require `pass: true` before reporting success.
 Then inspect status:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit status --target . --json
+npx --yes codex-autopilot-kit status --target . --json
 ```
 
 Confirm the expected preset, profile, concurrency, version, and roles.
+
+## GitHub fallback
+
+If npm is unavailable but GitHub is reachable, substitute `codex-autopilot-kit` with `github:crunaldo/codex-autopilot-kit` in the commands above. Do not silently change source when reproducibility requirements pin a particular package or commit.
 
 ## Files the kit may manage
 
@@ -105,11 +121,7 @@ AUTOPILOT-GOAL.md
 .gitignore               # only the local backup ignore entry
 ```
 
-Backups may be created under:
-
-```text
-.codex-autopilot-backups/
-```
+Backups may be created under `.codex-autopilot-backups/`.
 
 ## Forbidden side effects
 
@@ -137,9 +149,7 @@ After installation:
 
 ## Idempotency
 
-Re-running the same desired configuration should not rewrite matching managed files or create unnecessary backups.
-
-Use `diff --json` before repeat installs when you need an explicit proof that the target already matches.
+Re-running the same desired configuration should not rewrite matching managed files or create unnecessary backups. Use `diff --json` before repeat installs when you need explicit proof that the target already matches.
 
 ## After installation
 
