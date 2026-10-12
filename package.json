@@ -1,6 +1,6 @@
 {
   "name": "codex-autopilot-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Safe project-scoped multi-agent autopilot for Codex with interactive setup, diff, doctor, and reusable Goal contracts",
   "type": "module",
   "bin": {
