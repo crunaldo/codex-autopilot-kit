@@ -23,7 +23,7 @@ jobs:
           mkdir -p release
           git archive --format=zip --output=release/codex-autopilot-kit-${GITHUB_REF_NAME}.zip HEAD
           git archive --format=tar.gz --output=release/codex-autopilot-kit-${GITHUB_REF_NAME}.tar.gz HEAD
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: release/*
           generate_release_notes: true
