@@ -9,8 +9,9 @@ const required = [
   'templates/core/.codex/config.toml','templates/core/.codex/agents/explorer.toml','templates/core/.codex/agents/worker.toml','templates/core/.codex/agents/reviewer.toml',
   'templates/goals/generic.md','templates/goals/frontend-visual.md','templates/goals/backend.md',
   'docs/GETTING_STARTED.md','docs/ARCHITECTURE.md','docs/MODEL_STRATEGY.md','docs/SAFETY.md','docs/DISTRIBUTION.md',
-  '.github/workflows/ci.yml','.github/workflows/release.yml',
-  'assets/brand/logo.svg','assets/brand/banner.svg','assets/brand/architecture.svg','assets/brand/demo-flow.svg','assets/diagrams/architecture.svg'
+  '.github/workflows/ci.yml','.github/workflows/release.yml','.github/workflows/pages.yml',
+  'assets/brand/logo.svg','assets/brand/banner.svg','assets/brand/architecture.svg','assets/brand/demo-flow.svg','assets/diagrams/architecture.svg',
+  'configurator/index.html','configurator/styles.css','configurator/app.js','configurator/assets/logo.svg'
 ];
 const decoder = new TextDecoder('utf-8', { fatal: true });
 let failed = false;
@@ -28,5 +29,9 @@ if (pkg.publishConfig?.provenance !== true) { console.error('npm provenance must
 for (const rel of ['README.md','README.es.md','INSTALL_FOR_AGENTS.md','llms.txt','CHANGELOG.md']) {
   if (!(pkg.files || []).includes(rel)) { console.error(`npm package files missing ${rel}`); failed = true; }
 }
+const configurator = fs.readFileSync(path.join(root,'configurator/index.html'),'utf8');
+for (const marker of ['preset','profile','concurrency','copyPreview','copyInstall','langToggle']) {
+  if (!configurator.includes(marker)) { console.error(`configurator missing marker: ${marker}`); failed = true; }
+}
 if (failed) process.exit(1);
-console.log(`PASS: v${pkg.version}; ${required.length} required files present, valid UTF-8, zero runtime dependencies, npm distribution metadata valid.`);
+console.log(`PASS: v${pkg.version}; ${required.length} required files present, valid UTF-8, zero runtime dependencies, npm distribution metadata and configurator surface valid.`);
