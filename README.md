@@ -10,7 +10,7 @@
 
 <p align="center">
   <strong>Keep Codex. Add Autopilot.</strong><br />
-  Turn an existing Codex project into a safe, project-scoped multi-agent workflow in one command.
+  Turn an existing Codex project into a safe, project-scoped multi-agent workflow.
 </p>
 
 <p align="center">
@@ -20,27 +20,100 @@
   <a href="package.json"><img src="https://img.shields.io/badge/runtime_dependencies-0-success" alt="Zero runtime dependencies" /></a>
 </p>
 
-Codex Autopilot Kit installs a tested `.codex/` agent stack plus reusable Goal templates into an existing repository. A strong supervisor plans and evaluates while scoped subagents explore, implement, test, and independently review.
+Codex Autopilot Kit installs a tested `.codex/` agent stack plus reusable Goal templates into an existing repository. A supervisor plans and evaluates while scoped subagents explore, implement, test, and independently review.
 
-It is deliberately **not another coding agent, IDE, cloud platform, or orchestration runtime**. It is a lightweight autopilot layer for people who already want to use Codex and do not want to replace their existing workflow.
+It is deliberately **not another coding agent, IDE, cloud platform, or orchestration runtime**. It is a lightweight autopilot layer for people who already want to use Codex without replacing their workflow.
 
-> Default strategy: **Supervisor (you choose) → Luna Medium explorer → Luna High worker → Luna High reviewer**, one subagent at a time.
+> Default strategy: **Supervisor (you choose) → Luna Medium explorer → Luna High worker → Luna High reviewer**, concurrency 1 by default.
 
-## Install in one command
+## Recommended setup: `init`
 
 From the target project root:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset generic
+npx --yes github:crunaldo/codex-autopilot-kit init --target .
 ```
 
-Then verify it:
+The wizard lets you choose:
+
+- Goal preset: `generic`, `frontend-visual`, or `backend`;
+- execution profile: `economy`, `balanced`, or `quality`;
+- maximum subagent concurrency: `1`, `2`, or `3`.
+
+It shows a configuration summary before any installation happens. Concurrency `1` is the recommended conservative default.
+
+For CI, scripts, or agent-driven setup:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit doctor --target .
+npx --yes github:crunaldo/codex-autopilot-kit init \
+  --target . \
+  --preset generic \
+  --profile balanced \
+  --concurrency 1 \
+  --yes
 ```
 
-The installer stays inside the target project, backs up conflicting managed files, creates a local manifest, and never edits your global `~/.codex` configuration.
+The wizard uses only Node.js standard-library modules. The package keeps **zero runtime dependencies**.
+
+## Inspect before installing
+
+### Dry run
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit install \
+  --target . \
+  --profile balanced \
+  --preset generic \
+  --concurrency 1 \
+  --dry-run
+```
+
+The preview classifies managed paths as:
+
+```text
+CREATE     new file
+REPLACE    existing file that would change
+UNCHANGED  file already matching the desired state
+UPDATE     .gitignore if the backup rule is missing
+```
+
+No files are written, no backups are created, and `~/.codex` is never touched.
+
+The wizard also supports a preview-only path:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit init \
+  --target . \
+  --preset frontend-visual \
+  --profile balanced \
+  --concurrency 1 \
+  --yes \
+  --dry-run
+```
+
+### Diff
+
+See the exact managed-file changes before installing:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit diff --target .
+```
+
+When the kit is already installed, `diff` defaults to the installed profile, preset, and concurrency. Compare against another desired setup without writing anything:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit diff \
+  --target . \
+  --profile quality \
+  --preset backend \
+  --concurrency 2
+```
+
+Machine-readable diff summary:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit diff --target . --json
+```
 
 ## Quick visual flow
 
@@ -48,11 +121,11 @@ The installer stays inside the target project, backs up conflicting managed file
   <img src="assets/brand/demo-flow.svg" alt="Install, doctor, and goal flow" width="100%" />
 </p>
 
-The shortest path is simple: install the project-scoped stack, run `doctor`, then start the autonomous Goal in a new Codex chat.
+The short path is: configure with `init`, inspect with `--dry-run` or `diff`, install, run `doctor`, then start the Goal in a new Codex chat.
 
 ## Why Codex Autopilot Kit?
 
-A long autonomous coding run should not require turning every step into the most expensive possible model call or adopting an entirely new agent platform.
+A long autonomous coding run should not require putting every step on the strongest possible model or adopting an entirely new agent platform.
 
 Codex Autopilot Kit separates responsibilities instead:
 
@@ -69,10 +142,10 @@ The result is a small project-local layer with explicit roles, reusable Goal con
 |---|---|
 | Keep the existing tool | Adds structure **to Codex** instead of replacing it |
 | Project isolation | Configuration lives in the repository, not global user config |
-| Predictable delegation | Explicit explorer, worker, and reviewer responsibilities |
-| Conservative autonomy | One subagent concurrently by default |
-| Inspectable setup | Managed files, manifest, backups, `status`, and `doctor` |
-| Cost-aware execution | Strong supervisor + scoped worker roles instead of strongest-model-everywhere |
+| Predictable delegation | Explicit Explorer / Worker / Reviewer responsibilities |
+| Conservative autonomy | Concurrency 1 by default |
+| Inspectable setup | `init`, `--dry-run`, `diff`, backups, manifest |
+| Cost-aware execution | Strong supervisor + scoped worker roles |
 | Reusable workflows | Goal presets for general, frontend/visual, and backend work |
 | Low operational footprint | Zero package runtime dependencies; no hidden services |
 
@@ -82,7 +155,7 @@ The result is a small project-local layer with explicit roles, reusable Goal con
   <img src="assets/brand/architecture.svg" alt="Codex Autopilot Kit architecture" width="100%" />
 </p>
 
-This separation is intentional: discovery and review do not need write access, implementation stays scoped, and the supervisor retains escalation decisions.
+This separation is intentional: discovery and review do not need write access, implementation stays scoped, and the supervisor retains escalation and stopping decisions.
 
 ## Positioning
 
@@ -97,20 +170,9 @@ Codex Autopilot Kit is intentionally narrower than full agent platforms and orch
 | Open Ralph Wiggum | Lightweight iterative agent loop |
 | Awesome Agent Orchestrators | Discovery/reference list for orchestration projects |
 
-### Choose this kit if...
-
-- you already use **Codex** and want to keep it;
-- you want multi-agent roles without adopting a separate orchestration platform;
-- you prefer configuration that is **repository-scoped and reversible**;
-- you want explorer and reviewer roles to remain read-only by default;
-- you want a reusable autonomous Goal contract instead of an unbounded “keep trying” loop;
-- you value a small operational footprint and explicit safety boundaries.
-
 The goal is not to replace broader platforms. It is to make an existing Codex project more autonomous without taking it over.
 
 ## What gets installed
-
-The exact generated files depend on the selected preset/profile, but the managed stack includes:
 
 ```text
 .codex/
@@ -119,95 +181,70 @@ The exact generated files depend on the selected preset/profile, but the managed
     explorer.toml
     worker.toml
     reviewer.toml
+  autopilot-kit.json
 
 AUTOPILOT-GOAL.md
 ```
 
-The installer also records a local manifest and creates backups before replacing conflicting managed paths.
+Managed files are backed up before replacement. Re-running an install that already matches is idempotent: it does not rewrite managed files or create unnecessary backups.
 
-## Installation
+## Direct installation
 
-### Recommended: invoke this repository with `npx`
-
-General software work:
+The lower-level installer remains available:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset generic
+npx --yes github:crunaldo/codex-autopilot-kit install \
+  --target . \
+  --profile balanced \
+  --preset generic \
+  --concurrency 1
 ```
 
-Visual/frontend cloning work:
+For frontend/visual work:
 
 ```bash
-npx --yes github:crunaldo/codex-autopilot-kit install --target . --profile balanced --preset frontend-visual
+npx --yes github:crunaldo/codex-autopilot-kit install \
+  --target . \
+  --profile balanced \
+  --preset frontend-visual \
+  --concurrency 1
 ```
 
-The installer:
+If an unmanaged `.codex/config.toml` exists, normal installation stops. Inspect with `diff` or `--dry-run` first; use `--force` only when you intentionally want the kit to back it up and replace managed paths.
 
-1. stays inside the target project;
-2. backs up conflicting `.codex` / Goal files;
-3. installs UTF-8-safe agent configuration;
-4. creates a local manifest;
-5. adds the backup directory to `.gitignore`;
-6. never edits your global `~/.codex` configuration.
-
-### Local clone
-
-```bash
-git clone https://github.com/crunaldo/codex-autopilot-kit.git
-cd codex-autopilot-kit
-node bin/codex-autopilot.mjs install --target /path/to/project
-```
-
-Windows PowerShell wrapper:
-
-```powershell
-.\install.ps1 -Target C:\path\to\project
-```
-
-macOS/Linux wrapper:
-
-```bash
-./install.sh --target /path/to/project
-```
-
-## Verify the installation
+## Doctor
 
 ```bash
 npx --yes github:crunaldo/codex-autopilot-kit doctor --target .
 ```
 
-Expected roles:
+Doctor checks required files, strict UTF-8, role registration, expected role models, read-only Explorer/Reviewer, disabled nested agents, configured concurrency, and the local manifest.
 
-| Role | Default model | Reasoning | Purpose |
-|---|---|---:|---|
-| `explorer` | `gpt-6-luna` | medium | targeted read-only discovery |
-| `worker` | `gpt-6-luna` | high | implementation, debugging, tests |
-| `reviewer` | `gpt-6-luna` | high | independent final review |
+For CI and agents:
 
-Concurrency defaults to **1** subagent at a time.
-
-## Supervisor model
-
-The kit does **not** force the parent/supervisor model. Select it in Codex when starting the run.
-
-For users of the third-party `codex-chatgpt-web` bridge, the field-tested setup is:
-
-```text
-GPT-5.6 Sol (Web) High  -> supervisor
-GPT-6 Luna Medium       -> explorer
-GPT-6 Luna High         -> worker
-GPT-6 Luna High         -> reviewer
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit doctor --target . --json
 ```
 
-Without that bridge, use the strongest supervisor model available to you and keep the subagent roles project-scoped.
+The JSON contract includes `schemaVersion`, `command`, `pass`, `target`, `kitVersion`, and individual checks.
 
-See [Model strategy](docs/MODEL_STRATEGY.md) and [Bridge setup](docs/BRIDGE_SETUP.md).
+## Status
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit status --target .
+```
+
+Machine-readable status:
+
+```bash
+npx --yes github:crunaldo/codex-autopilot-kit status --target . --json
+```
+
+If the kit is not installed, JSON mode returns `installed: false` with exit code `2`.
 
 ## Start an autonomous Goal
 
-After installing, open a **new Codex chat** in the project so the local config is loaded. Select your supervisor model, then invoke `/goal` using the installed `AUTOPILOT-GOAL.md` as the contract.
-
-A practical instruction is:
+After install/update, open a **new Codex chat** in the project so local configuration reloads. Select your supervisor model, then invoke `/goal` using `AUTOPILOT-GOAL.md` as the contract.
 
 ```text
 /goal Read AUTOPILOT-GOAL.md and autonomously complete the objective I provide below. Respect its agent roles, safety rules, stopping conditions, and verification gates. Do not wait for me between iterations unless truly BLOCKED.
@@ -216,17 +253,15 @@ OBJECTIVE:
 <describe the project outcome here>
 ```
 
-For long runs, define concrete pass/fail gates in the Goal instead of asking the agent to “keep improving.”
+For long runs, define concrete pass/fail gates instead of asking the agent to “keep improving.”
 
 ## Profiles
-
-`--profile` changes only subagent reasoning levels:
 
 | Profile | Explorer | Worker | Reviewer | Recommended for |
 |---|---:|---:|---:|---|
 | `economy` | medium | medium | high | repetitive or well-scoped work |
 | `balanced` | medium | high | high | **default; real project work** |
-| `quality` | high | high | high | discovery-heavy difficult repos |
+| `quality` | high | high | high | difficult, discovery-heavy repositories |
 
 No profile enables `max` automatically.
 
@@ -239,10 +274,12 @@ No profile enables `max` automatically.
 ## Commands
 
 ```text
-codex-autopilot install   Install/update the project-scoped stack
-codex-autopilot doctor    Validate files, UTF-8, roles, and manifest
-codex-autopilot status    Show installed profile/preset/version
-codex-autopilot uninstall Remove managed files; optionally restore backup
+codex-autopilot init       Interactive configuration and installation wizard
+codex-autopilot install    Install/update the project-scoped stack
+codex-autopilot diff       Compare current managed files with desired state
+codex-autopilot doctor     Validate files, roles, concurrency, and manifest
+codex-autopilot status     Show installed profile/preset/concurrency/version
+codex-autopilot uninstall  Remove managed files; optionally restore backup
 codex-autopilot print-goal Print a Goal preset to stdout
 ```
 
@@ -257,28 +294,32 @@ npx --yes github:crunaldo/codex-autopilot-kit --help
 The installer is intentionally conservative:
 
 - project-local only;
-- backups before overwriting managed paths;
+- backups before replacing managed paths;
 - no changes to `~/.codex`;
 - no git commit/push;
 - no package installation in the target project;
 - no hidden network services;
-- one subagent concurrently by default;
+- concurrency 1 by default;
 - reviewer is read-only;
-- explorer is read-only.
+- explorer is read-only;
+- `--dry-run` and `diff` are inspection-only.
 
 Read [SAFETY.md](docs/SAFETY.md) before using unattended Goals on valuable repositories.
 
-## Third-party bridge
+## Supervisor model
 
-`codex-chatgpt-web` is optional and not maintained by this project. It can expose ChatGPT Web models inside the native Codex harness and supports MCP/subagents, but it adds a browser automation and account-security dependency. This kit never installs or configures it silently.
+The kit does **not** force the parent/supervisor model. Select it in Codex when starting the run.
 
-See [BRIDGE_SETUP.md](docs/BRIDGE_SETUP.md).
+A field-tested optional bridge setup is:
 
-## Field notes
+```text
+GPT-5.6 Sol (Web) High  -> supervisor
+GPT-6 Luna Medium       -> explorer
+GPT-6 Luna High         -> worker
+GPT-6 Luna High         -> reviewer
+```
 
-The architecture was validated with repeated autonomous Goals. In one controlled run, a Web supervisor + Luna High worker/reviewer completed a larger CLI evolution in ~8.5 minutes while the observed 5-hour usage meter moved from 66% to 65%. The Goal itself reported ~1.52M tokens, illustrating that Goal token telemetry should **not** be treated as a direct proxy for plan quota consumption.
-
-These observations are anecdotal, environment-specific, and not an OpenAI benchmark. Details: [field notes](docs/field-notes/2026-10.md).
+`codex-chatgpt-web` is optional, third-party, and never installed silently. See [Model strategy](docs/MODEL_STRATEGY.md) and [Bridge setup](docs/BRIDGE_SETUP.md).
 
 ## Documentation
 
