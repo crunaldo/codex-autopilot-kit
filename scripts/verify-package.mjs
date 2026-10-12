@@ -33,5 +33,9 @@ const configurator = fs.readFileSync(path.join(root,'configurator/index.html'),'
 for (const marker of ['preset','profile','concurrency','copyPreview','copyInstall','langToggle']) {
   if (!configurator.includes(marker)) { console.error(`configurator missing marker: ${marker}`); failed = true; }
 }
+const appSource = fs.readFileSync(path.join(root,'configurator/app.js'),'utf8');
+try { new Function(appSource); } catch (error) { console.error(`configurator/app.js syntax error: ${error.message}`); failed = true; }
+const pagesWorkflow = fs.readFileSync(path.join(root,'.github/workflows/pages.yml'),'utf8');
+if (!pagesWorkflow.includes('enablement: true')) { console.error('Pages workflow must enable the Pages site when absent'); failed = true; }
 if (failed) process.exit(1);
 console.log(`PASS: v${pkg.version}; ${required.length} required files present, valid UTF-8, zero runtime dependencies, npm distribution metadata and configurator surface valid.`);
