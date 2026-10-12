@@ -1,13 +1,21 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-10-12
 
-- Added `codex-autopilot init` interactive setup wizard.
-- Added preset, profile, and concurrency selection before install.
-- Added a configuration summary and confirmation gate.
-- Added non-interactive `init` support with explicit options plus `--yes`.
-- Made subagent concurrency configurable (`1`, `2`, or `3`) and persisted it in the manifest.
-- Updated `doctor` and `status` to respect configured concurrency.
+### Effortless setup
+
+- Added interactive `codex-autopilot init` wizard.
+- Added preset, profile, and concurrency selection with a confirmation summary.
+- Added non-interactive `init` for CI, scripts, and agent-driven setup.
+- Added `init --dry-run` and improved `install --dry-run` with `CREATE`, `REPLACE`, and `UNCHANGED` classification.
+- Added `codex-autopilot diff` for inspection-only managed-file comparisons.
+- Added `diff --json` for machine-readable change summaries.
+- Stabilized `doctor --json` and `status --json` envelopes with `schemaVersion`, `command`, and `kitVersion` metadata.
+- `status --json` now reports `installed: false` with exit code `2` for uninstalled targets.
+- Install is now idempotent when managed files already match the desired state, avoiding unnecessary writes and backups.
+- Configured concurrency is persisted in both `.codex/config.toml` and the local manifest and is validated by `doctor`.
+- Brought the Spanish README to feature parity with the English README.
+- Expanded automated tests for init, dry-run, diff, JSON contracts, idempotency, concurrency, and backups.
 
 ## 0.1.0 — 2026-10-12
 
