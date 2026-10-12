@@ -1,0 +1,119 @@
+# Codex Autopilot Kit
+
+> Project-scoped, zero-runtime-dependency multi-agent autopilot layer for Codex.
+
+Repository: https://github.com/crunaldo/codex-autopilot-kit
+License: MIT
+Node.js: 20+
+CLI: codex-autopilot
+
+## Purpose
+
+Codex Autopilot Kit adds a repository-local `.codex/` agent stack and reusable autonomous Goal contracts to an existing Codex project. It does not replace Codex, install a separate agent runtime, or modify the user's global `~/.codex` configuration.
+
+Default roles:
+- supervisor: selected by the user in Codex; owns planning, delegation, evaluation, escalation, and stopping;
+- explorer: GPT-6 Luna, read-only, targeted discovery;
+- worker: GPT-6 Luna, implementation/debugging/testing;
+- reviewer: GPT-6 Luna, read-only independent review.
+
+Default concurrency is 1.
+
+## Preferred installation for humans
+
+From the target repository root:
+
+    npx --yes github:crunaldo/codex-autopilot-kit init --target .
+
+## Preferred installation for coding agents
+
+Read `INSTALL_FOR_AGENTS.md` first. Use the non-interactive preview before writing:
+
+    npx --yes github:crunaldo/codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes --dry-run
+
+Then inspect:
+
+    npx --yes github:crunaldo/codex-autopilot-kit diff --target . --profile balanced --preset generic --concurrency 1 --json
+
+Install only after the desired configuration is confirmed:
+
+    npx --yes github:crunaldo/codex-autopilot-kit init --target . --preset generic --profile balanced --concurrency 1 --yes
+
+Verify:
+
+    npx --yes github:crunaldo/codex-autopilot-kit doctor --target . --json
+
+## Safety invariants
+
+- Never modify `~/.codex`.
+- Stay inside the target project.
+- Back up managed files before replacement.
+- Do not use `--force` against an unmanaged `.codex/config.toml` without explicit authorization.
+- Do not commit, push, release, deploy, rotate credentials, or weaken tests merely to complete installation.
+- Explorer and reviewer remain read-only by default.
+- No nested subagents.
+- No package runtime dependencies.
+
+## CLI commands
+
+- `init` — interactive or fully specified project setup.
+- `install` — lower-level install/update command.
+- `diff` — inspection-only current-vs-desired comparison.
+- `doctor` — validate managed files and role configuration; supports `--json`.
+- `status` — inspect installed manifest; supports `--json`.
+- `uninstall` — remove managed files; can restore latest backup.
+- `print-goal` — print a Goal preset.
+
+`init --dry-run` and `install --dry-run` do not write files.
+
+## Presets
+
+- `generic` — general software work.
+- `frontend-visual` — evidence-driven visual/frontend workflow.
+- `backend` — backend/API/service implementation and verification.
+
+## Profiles
+
+- `economy` — explorer medium, worker medium, reviewer high.
+- `balanced` — explorer medium, worker high, reviewer high; recommended default.
+- `quality` — explorer high, worker high, reviewer high.
+
+No profile enables maximum reasoning automatically.
+
+## Canonical documentation
+
+- `README.md` — primary English overview and quick start.
+- `README.es.md` — Spanish parity documentation.
+- `INSTALL_FOR_AGENTS.md` — deterministic agent installation contract.
+- `docs/GETTING_STARTED.md` — installation and first-run guide.
+- `docs/ARCHITECTURE.md` — architecture and role separation.
+- `docs/MODEL_STRATEGY.md` — model/reasoning strategy.
+- `docs/GOAL_PLAYBOOK.md` — Goal usage patterns.
+- `docs/SAFETY.md` — safety model.
+- `docs/TROUBLESHOOTING.md` — troubleshooting.
+- `docs/DISTRIBUTION.md` — release and distribution channels.
+- `CHANGELOG.md` — shipped changes.
+- `ROADMAP.md` — planned work.
+
+## Managed target files
+
+    .codex/config.toml
+    .codex/agents/explorer.toml
+    .codex/agents/worker.toml
+    .codex/agents/reviewer.toml
+    .codex/autopilot-kit.json
+    AUTOPILOT-GOAL.md
+
+Local backups are stored under `.codex-autopilot-backups/` and ignored by git.
+
+## Autonomous Goal start
+
+After installation, start a NEW Codex chat so project-local configuration reloads, then use the installed `AUTOPILOT-GOAL.md` contract with `/goal`.
+
+## Distribution
+
+The GitHub repository is the canonical source. npm publication is supported by the release workflow when npm credentials/trusted publishing are configured. Never claim an npm version is published unless the npm registry confirms it.
+
+## Project identity
+
+Codex Autopilot Kit is a community project and is not affiliated with or endorsed by OpenAI. Product names and trademarks belong to their respective owners.
