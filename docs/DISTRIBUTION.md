@@ -1,6 +1,6 @@
 # Distribution and discovery
 
-Codex Autopilot Kit uses GitHub as the canonical source and is prepared for reproducible GitHub Releases and npm publication.
+Codex Autopilot Kit uses GitHub as the canonical source and is prepared for reproducible GitHub Releases and staged npm publication.
 
 ## Channels
 
@@ -31,35 +31,67 @@ Before creating a release it:
 5. uploads both as workflow artifacts;
 6. creates or updates the corresponding GitHub Release.
 
-Release command from an authorized local checkout:
+Release command from an authorized local checkout for the current package version:
 
 ```bash
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.3.0
+git push origin v0.3.0
 ```
 
 Do not move an existing release tag after publication. Bump the version instead.
 
-### npm
+### npm staged publishing
 
-`package.json` is configured for public publication with provenance.
+The npm package name is the unscoped package `codex-autopilot-kit`. Do not substitute the account scope `@crunaldo`; that would be a different package identity.
 
-The release workflow contains an `npm-publish` job, but it is intentionally opt-in. It runs when either:
+The release workflow intentionally does **not** run `npm publish`. npm distribution is staged first and requires a separate human approval with 2FA.
 
-- repository variable `NPM_PUBLISH` is set to `true`; or
-- the workflow is manually dispatched with `publish_npm=true`.
+The `npm-stage` job is opt-in. It runs when either:
 
-Recommended authentication is npm Trusted Publishing for this GitHub repository and workflow. A repository/environment secret named `NPM_TOKEN` is also supported when token-based publishing is required.
+- repository variable `NPM_STAGE` is set to `true`; or
+- the workflow is manually dispatched with `stage_npm=true`.
 
-Before the first publication:
+The workflow uses:
 
-1. confirm the package name is still available on npm;
+```bash
+npm stage publish --provenance --access public
+```
+
+After a successful staged upload, inspect it before approval:
+
+```bash
+npm stage list codex-autopilot-kit
+```
+
+Only after inspection should an authorized human approve the stage with 2FA:
+
+```bash
+npm stage approve <stage-id> --otp <code>
+```
+
+The GitHub workflow intentionally never runs `npm stage approve`.
+
+#### Token policy
+
+Do not create a direct-publish token with `All packages` access for this workflow.
+
+For the first publication, `codex-autopilot-kit` may not yet appear in npm's package selector. A short-lived **stage-only** granular access token can therefore require temporary access to all packages so it can create the new unscoped package. That token must be stored only as the GitHub Environment secret `NPM_STAGE_TOKEN`, used only by the staging job, given the shortest practical expiration, and revoked after the first package is established if a narrower package-specific credential can replace it.
+
+Do not use `@crunaldo` merely because npm offers it in the selector; the repository publishes the unscoped `codex-autopilot-kit` package.
+
+Before the first npm stage:
+
+1. confirm the unscoped package name `codex-autopilot-kit` is still available;
 2. configure the `npm` GitHub Environment;
-3. configure npm Trusted Publishing or `NPM_TOKEN`;
-4. run the release workflow manually with npm publishing enabled, or enable `NPM_PUBLISH` for tag releases;
-5. verify the published registry metadata before changing README commands to npm-first syntax.
+3. create a short-lived stage-only granular token only when ready to stage;
+4. save it as `NPM_STAGE_TOKEN`;
+5. trigger `npm-stage` manually or enable `NPM_STAGE` for the intended release;
+6. inspect the staged package;
+7. approve manually with 2FA;
+8. verify registry metadata before changing README commands to npm-first syntax;
+9. revoke or narrow the temporary token after the package exists.
 
-Never claim that a version exists on npm until the registry confirms it.
+Never claim that a version exists on npm until the approval has completed and the registry confirms it.
 
 ## Release checklist
 
@@ -73,10 +105,13 @@ Never claim that a version exists on npm until the registry confirms it.
 [ ] CI on main is green
 [ ] tag matches package version exactly
 [ ] GitHub Release exists with .tgz + SHA-256
-[ ] npm publication verified, if enabled
+[ ] npm stage inspected, if enabled
+[ ] npm stage approved manually with 2FA
+[ ] npm registry publication verified
+[ ] temporary stage token revoked or narrowed
 ```
 
-The automated subset is available as:
+The automated validation subset is available as:
 
 ```bash
 npm run release:check
@@ -116,24 +151,12 @@ Keep both files synchronized with public CLI behavior.
 
 ## Awesome Agent Orchestrators
 
-The target directory currently requires at least 5 GitHub stars plus recent project activity before accepting a project.
+The project has reached the directory's minimum adoption threshold and the submission material is maintained in `docs/AWESOME_SUBMISSION.md`.
 
-Do not submit prematurely. Once the threshold is met, use one PR and follow the directory's alphabetical ordering and established one-line description style.
-
-Suggested entry text:
-
-> **Codex Autopilot Kit** — Adds safe, project-scoped explorer/worker/reviewer orchestration and reusable autonomous Goal contracts to Codex.
-
-Suggested PR title:
-
-```text
-Add Codex Autopilot Kit to Coding Agents
-```
-
-Confirm the current section name and contribution rules immediately before submission because external directory structure may change.
+Use one PR, preserve alphabetical ordering, and follow the upstream one-line description style.
 
 ## Package identity
 
-The npm package and GitHub repository use the same name: `codex-autopilot-kit`.
+The npm package and GitHub repository use the same unscoped name: `codex-autopilot-kit`.
 
 The project is community maintained and is not affiliated with or endorsed by OpenAI.
