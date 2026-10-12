@@ -1,0 +1,29 @@
+name: Release package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: npm run verify
+      - name: Build archives
+        run: |
+          mkdir -p release
+          git archive --format=zip --output=release/codex-autopilot-kit-${GITHUB_REF_NAME}.zip HEAD
+          git archive --format=tar.gz --output=release/codex-autopilot-kit-${GITHUB_REF_NAME}.tar.gz HEAD
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
+          generate_release_notes: true

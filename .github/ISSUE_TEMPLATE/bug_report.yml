@@ -1,0 +1,46 @@
+name: Bug report
+description: Report installer, config, or runtime behavior that differs from the documented contract.
+title: "[bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include secrets, tunnel/API keys, browser cookies, or private repository content."
+  - type: input
+    id: version
+    attributes:
+      label: Kit version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: client
+    attributes:
+      label: Codex client
+      options: [Desktop, CLI, IDE, Other]
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: Windows 11 / macOS / Ubuntu
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Doctor output
+      description: Redact private paths if needed.

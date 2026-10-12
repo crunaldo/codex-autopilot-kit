@@ -1,0 +1,20 @@
+# Managed by Codex Autopilot Kit v__KIT_VERSION__
+# Project-scoped: this file does not modify ~/.codex.
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 1
+default_subagent_model = "gpt-6-luna"
+default_subagent_reasoning_effort = "medium"
+
+[agents.explorer]
+description = "Read-only targeted repository explorer."
+config_file = "./agents/explorer.toml"
+
+[agents.worker]
+description = "Primary implementation, debugging, and validation worker."
+config_file = "./agents/worker.toml"
+
+[agents.reviewer]
+description = "Independent read-only final reviewer."
+config_file = "./agents/reviewer.toml"

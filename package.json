@@ -1,0 +1,47 @@
+{
+  "name": "codex-autopilot-kit",
+  "version": "0.1.0",
+  "description": "Project-scoped multi-agent autopilot installer for Codex",
+  "type": "module",
+  "bin": {
+    "codex-autopilot": "./bin/codex-autopilot.mjs"
+  },
+  "scripts": {
+    "test": "node scripts/test.mjs",
+    "verify": "node scripts/verify-package.mjs",
+    "doctor": "node bin/codex-autopilot.mjs doctor --target ."
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "codex",
+    "openai",
+    "agents",
+    "subagents",
+    "autopilot",
+    "goal",
+    "mcp"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crunaldo/codex-autopilot-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/crunaldo/codex-autopilot-kit/issues"
+  },
+  "homepage": "https://github.com/crunaldo/codex-autopilot-kit#readme",
+  "files": [
+    "bin/",
+    "templates/",
+    "docs/",
+    "assets/",
+    "install.ps1",
+    "install.sh",
+    "uninstall.ps1",
+    "uninstall.sh",
+    "LICENSE",
+    "README.md"
+  ]
+}
