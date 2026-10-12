@@ -42,6 +42,14 @@ npx --yes github:crunaldo/codex-autopilot-kit doctor --target .
 
 The installer stays inside the target project, backs up conflicting managed files, creates a local manifest, and never edits your global `~/.codex` configuration.
 
+## Quick visual flow
+
+<p align="center">
+  <img src="assets/brand/demo-flow.svg" alt="Install, doctor, and goal flow" width="100%" />
+</p>
+
+The shortest path is simple: install the project-scoped stack, run `doctor`, then start the autonomous Goal in a new Codex chat.
+
 ## Why Codex Autopilot Kit?
 
 A long autonomous coding run should not require turning every step into the most expensive possible model call or adopting an entirely new agent platform.
@@ -70,42 +78,24 @@ The result is a small project-local layer with explicit roles, reusable Goal con
 
 ## Architecture
 
-```text
-                         ┌────────────────────┐
-                         │     SUPERVISOR     │
-                         │   model you choose │
-                         └─────────┬──────────┘
-                                   │
-                        plan / delegate / judge
-                                   │
-                 ┌─────────────────┼─────────────────┐
-                 │                 │                 │
-                 ▼                 ▼                 ▼
-          ┌────────────┐    ┌────────────┐    ┌────────────┐
-          │  EXPLORER  │    │   WORKER   │    │  REVIEWER  │
-          │ read-only  │    │ implements │    │ read-only  │
-          │   medium   │    │    high    │    │    high    │
-          └────────────┘    └────────────┘    └────────────┘
-                 │                 │                 │
-                 └─────────────────┴─────────────────┘
-                                   │
-                            PASS / FIX / BLOCKED
-```
+<p align="center">
+  <img src="assets/brand/architecture.svg" alt="Codex Autopilot Kit architecture" width="100%" />
+</p>
 
 This separation is intentional: discovery and review do not need write access, implementation stays scoped, and the supervisor retains escalation decisions.
 
-## How it fits among other agent tools
+## Positioning
 
-Codex Autopilot Kit is intentionally narrower than full agent platforms and orchestration frameworks. The table below describes **positioning, not a benchmark**; these projects evolve quickly and solve different problems well.
+Codex Autopilot Kit is intentionally narrower than full agent platforms and orchestration frameworks. It focuses on people who already use Codex and want a lightweight, project-scoped autonomy layer rather than a replacement coding environment.
 
-| Project | Best fit when you want... | Primary approach | Scope |
-|---|---|---|---|
-| **Codex Autopilot Kit** | To keep using Codex but add safe project-local multi-agent autonomy | Codex configuration + Goal contracts + specialized roles | **Codex-first** |
-| [Ralph Orchestrator](https://github.com/mikeyobrien/ralph-orchestrator) | A richer autonomous orchestration framework with iterative workflows | Orchestration runtime with hats/events/presets | Multi-backend |
-| [OpenHands](https://github.com/OpenHands/OpenHands) | A broader agent platform/control center with isolated or remote execution options | Agent platform + workspaces/backends | Multi-agent / multi-backend |
-| [OpenCode](https://github.com/anomalyco/opencode) | A standalone open-source coding agent experience | Coding agent with its own CLI/TUI/Desktop ecosystem | Multi-provider |
-| [Open Ralph Wiggum](https://github.com/Th0rgal/open-ralph-wiggum) | A lightweight autonomous loop around existing coding-agent CLIs | Repeated agent loop | Multi-agent CLI |
-| [Awesome Agent Orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) | To discover and compare orchestration projects | Curated ecosystem directory | Reference list |
+| Tool | Typical focus |
+|---|---|
+| **Codex Autopilot Kit** | Add structured multi-agent autonomy to an existing Codex project |
+| Ralph Orchestrator | Broader autonomous orchestration workflows |
+| OpenHands | Full agent platform and execution environments |
+| OpenCode | Standalone coding-agent experience |
+| Open Ralph Wiggum | Lightweight iterative agent loop |
+| Awesome Agent Orchestrators | Discovery/reference list for orchestration projects |
 
 ### Choose this kit if...
 
@@ -116,7 +106,7 @@ Codex Autopilot Kit is intentionally narrower than full agent platforms and orch
 - you want a reusable autonomous Goal contract instead of an unbounded “keep trying” loop;
 - you value a small operational footprint and explicit safety boundaries.
 
-If you need a provider-agnostic agent, a full control plane, remote workspaces, or a general multi-backend orchestration runtime, one of the projects above may be a better fit. Codex Autopilot Kit focuses on doing one thing well: **making an existing Codex project more autonomous without taking it over**.
+The goal is not to replace broader platforms. It is to make an existing Codex project more autonomous without taking it over.
 
 ## What gets installed
 
