@@ -11,7 +11,7 @@ const required = [
   'docs/GETTING_STARTED.md','docs/ARCHITECTURE.md','docs/MODEL_STRATEGY.md','docs/SAFETY.md','docs/DISTRIBUTION.md',
   '.github/workflows/ci.yml','.github/workflows/release.yml','.github/workflows/pages.yml',
   'assets/brand/logo.svg','assets/brand/banner.svg','assets/brand/architecture.svg','assets/brand/demo-flow.svg','assets/diagrams/architecture.svg',
-  'configurator/index.html','configurator/styles.css','configurator/app.js','configurator/assets/logo.svg'
+  'configurator/index.html','configurator/styles.css','configurator/core.js','configurator/app.js','configurator/assets/logo.svg','scripts/test-configurator.mjs'
 ];
 const decoder = new TextDecoder('utf-8', { fatal: true });
 let failed = false;
@@ -26,15 +26,22 @@ if (!/^\d+\.\d+\.\d+$/.test(pkg.version)) { console.error(`package version must 
 if (Object.keys(pkg.dependencies || {}).length > 0) { console.error('runtime dependencies must remain zero'); failed = true; }
 if (pkg.publishConfig?.access !== 'public') { console.error('npm publishConfig.access must be public'); failed = true; }
 if (pkg.publishConfig?.provenance !== true) { console.error('npm provenance must remain enabled'); failed = true; }
+if (pkg.homepage !== 'https://crunaldo.github.io/codex-autopilot-kit/') { console.error('package homepage must point to the visual configurator'); failed = true; }
+if (!pkg.scripts?.test?.includes('test-configurator.mjs')) { console.error('npm test must include configurator coverage'); failed = true; }
 for (const rel of ['README.md','README.es.md','INSTALL_FOR_AGENTS.md','llms.txt','CHANGELOG.md']) {
   if (!(pkg.files || []).includes(rel)) { console.error(`npm package files missing ${rel}`); failed = true; }
 }
 const configurator = fs.readFileSync(path.join(root,'configurator/index.html'),'utf8');
-for (const marker of ['preset','profile','concurrency','copyPreview','copyInstall','langToggle']) {
+for (const marker of ['preset','profile','concurrency','copyPreview','copyInstall','langToggle','type="module"','www.npmjs.com/package/codex-autopilot-kit']) {
   if (!configurator.includes(marker)) { console.error(`configurator missing marker: ${marker}`); failed = true; }
 }
 const appSource = fs.readFileSync(path.join(root,'configurator/app.js'),'utf8');
-try { new Function(appSource); } catch (error) { console.error(`configurator/app.js syntax error: ${error.message}`); failed = true; }
+const coreSource = fs.readFileSync(path.join(root,'configurator/core.js'),'utf8');
+for (const marker of ['buildInitCommand','configFromSearch','configToSearch','usagePercent']) {
+  if (!coreSource.includes(marker)) { console.error(`configurator core missing marker: ${marker}`); failed = true; }
+}
+if (!appSource.includes("from './core.js'")) { console.error('configurator app must consume the testable core module'); failed = true; }
+if (!appSource.includes("source: 'npm'")) { console.error('configurator must generate npm-first commands'); failed = true; }
 const pagesWorkflow = fs.readFileSync(path.join(root,'.github/workflows/pages.yml'),'utf8');
 if (!pagesWorkflow.includes('enablement: true')) { console.error('Pages workflow must enable the Pages site when absent'); failed = true; }
 const releaseWorkflow = fs.readFileSync(path.join(root,'.github/workflows/release.yml'),'utf8');
