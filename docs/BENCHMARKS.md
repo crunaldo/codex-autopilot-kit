@@ -33,4 +33,6 @@ The local summary matches receipts by case ID and pair ID. A pair is comparable 
 
 ## Field-test status
 
-One local `blank-number-cli` pilot is recorded in [the October field notes](field-notes/2026-10.md): Codex-only passed, while the Kit run reached Explorer and Worker but blocked before Reviewer when local agent orchestration repeatedly failed. Both resulting copies passed the tests on independent verification; the Kit duration was not captured. The starter files were identical, but were uncommitted working-tree files at the recorded starting commit. Treat this as a blocked pilot, not evidence of comparative speed or quality. Repeat from a committed case and complete at least three comparable pairs before making a field claim.
+The [versioned benchmark report](field-notes/2026-10-12-versioned-benchmark.md) records three paired repetitions of each committed case and a separately labeled supplemental parsing pair. It includes fixed input hashes, environment and exact prompts, independent test results, delegation counts, timings, and interruptions. A quota-blocked attempt remains visible; it is not counted as a completed successful workflow.
+
+The earlier unversioned pilot remains in [the October field notes](field-notes/2026-10.md). Its reviewer completion and duration were not captured. Connection warnings in that pilot do not establish the cause of interruption; later successful runs emitted the same warnings. Neither dataset establishes general speed, quality, or cost savings.

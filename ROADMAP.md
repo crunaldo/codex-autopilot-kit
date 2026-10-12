@@ -14,7 +14,7 @@
 - Readiness checklist: implemented; ten observable checks, with unavailable Git state reported as unknown.
 - Benchmark suite: three fixed, test-backed starter tasks with deterministic acceptance checks; implemented.
 - Benchmark pairing and summaries: implemented with explicit case/repetition IDs; mismatched, incomplete, or duplicate pairs are surfaced.
-- Reproducible field-test protocol: documented; one pair is recorded, with Codex-only PASS and Kit BLOCKED before review. The single pilot is not enough to claim a general performance pattern.
+- Reproducible field-test protocol: documented and executed from committed fixtures. The [versioned report](docs/field-notes/2026-10-12-versioned-benchmark.md) records 18 original attempts plus two supplemental attempts: 19 PASS and one quota-blocked attempt, retained in the evidence. There are three successful pairs per case, including the labeled supplemental parsing pair; no general performance claim is made.
 - Installer merge strategy with conflict detection and backup-before-write: implemented.
 
 ## v1.0 readiness gates
@@ -23,7 +23,7 @@
 - `presets`: now has a standalone human-readable and JSON command.
 - Stable manifest: implemented and covered by package verification and CLI tests.
 - Codex configuration compatibility: CI validates all rendered config and agent layers against OpenAI's published schema; this does not test runtime model execution or agent quality.
-- Benchmark field evidence: pending at least three comparable paired repetitions per case; do not promote summary averages as causal evidence.
+- Benchmark field evidence: three successful paired repetitions per case are recorded, with an additional quota-blocked pair preserved. Evidence covers small local synthetic tasks on one runtime; broader field and runtime compatibility evidence remains limited. Do not promote these timings as causal evidence.
 - Documentation and npm release pipeline: present; v0.5 remains a draft PR and v1.0 has not been declared.
 
 ## v0.4 Visual Configurator
