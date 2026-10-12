@@ -1,6 +1,6 @@
 {
   "name": "codex-autopilot-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Project-scoped multi-agent autopilot installer for Codex",
   "type": "module",
   "bin": {
@@ -42,6 +42,7 @@
     "uninstall.ps1",
     "uninstall.sh",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "README.es.md"
   ]
 }
