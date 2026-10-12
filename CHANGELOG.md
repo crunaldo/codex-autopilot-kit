@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 — 2026-10-12
+
+### Distribution & Discovery
+
+- Added `llms.txt` with a concise machine-readable project guide, CLI surface, safety invariants, and canonical documentation map.
+- Added `INSTALL_FOR_AGENTS.md` with a deterministic preview → diff → install → doctor flow for coding agents and CI.
+- Added `docs/DISTRIBUTION.md` covering GitHub Releases, npm publication, discovery metadata, release checks, and community-directory submission readiness.
+- Expanded npm metadata, keywords, package contents, public publish configuration, and provenance support.
+- Added `npm run release:check` and a `prepublishOnly` validation gate.
+- Hardened the release workflow to validate tag/version alignment, run the full release check, build the npm tarball, generate SHA-256 checksums, and create/update GitHub Releases.
+- Added opt-in npm publication with provenance through the release workflow when npm authentication or Trusted Publishing is configured.
+- Expanded package verification to require distribution/discovery docs, release automation, npm metadata, zero runtime dependencies, and provenance configuration.
+- Prepared the canonical one-line description and submission plan for Awesome Agent Orchestrators; submission remains intentionally deferred until the directory's adoption threshold is met.
+
 ## 0.2.0 — 2026-10-12
 
 ### Effortless setup
