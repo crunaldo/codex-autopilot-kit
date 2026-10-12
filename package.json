@@ -46,6 +46,7 @@
     "bin/",
     "templates/",
     "docs/",
+    "benchmarks/",
     "assets/",
     "install.ps1",
     "install.sh",

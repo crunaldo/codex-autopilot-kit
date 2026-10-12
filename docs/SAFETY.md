@@ -14,7 +14,13 @@ Before replacing managed paths, the installer stores a timestamped snapshot unde
 
 The directory is added to `.gitignore`.
 
-If an unmanaged `.codex/config.toml` exists, install stops unless the user explicitly passes `--force`.
+If an unmanaged `.codex/config.toml` exists, install stops unless a config strategy is selected. `--config-strategy merge` preserves unrelated entries, backs up before writing, and aborts without changes on duplicate tables or conflicting kit settings. `--config-strategy replace` (or the legacy `--force`) backs up and replaces the config.
+
+## Local telemetry
+
+The record command writes only user-supplied, structured run metadata inside the selected target at `.autopilot/runs/`. It does not inspect or intercept Codex sessions and does not collect Goal text, prompts, tokens, costs, file paths, or network data. The files are not automatically added to `.gitignore`; decide whether to retain them in the project based on its privacy and collaboration needs.
+
+The readiness score inspects local project files and a read-only Git status command. Missing evidence is not reported as a pass; unavailable Git status is labeled unknown and receives no points. The score is a checklist, not a prediction of task quality.
 
 ## Before unattended execution
 

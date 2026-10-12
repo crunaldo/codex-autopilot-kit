@@ -76,7 +76,7 @@ Check `changed`, each managed file status, and the `.gitignore` status.
 
 ### 3. Handle unmanaged `.codex/config.toml`
 
-If an unmanaged `.codex/config.toml` exists, do **not** add `--force` automatically. Only use `--force` after explicit authorization to back up and replace kit-managed paths.
+If an unmanaged `.codex/config.toml` exists, preview `diff --config-strategy merge --json`. Use the merge strategy only when it reports no conflicts; it preserves unrelated entries, backs up before writing, and stops without changes on conflicts. Do **not** select `replace` or add `--force` unless the user explicitly authorizes backing up and replacing the config.
 
 ### 4. Install
 
@@ -86,6 +86,7 @@ npx --yes codex-autopilot-kit init \
   --preset generic \
   --profile balanced \
   --concurrency 1 \
+  --config-strategy merge \
   --yes
 ```
 

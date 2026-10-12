@@ -1,5 +1,15 @@
 # Roadmap
 
+## In progress — v0.5 Make it measurable
+
+- Run receipts and local telemetry: implemented; records are explicit, local, and exclude Goal text and tokens.
+- `runs` listing and JSON envelope: implemented.
+- Readiness checklist: implemented; ten observable checks, with unavailable Git state reported as unknown.
+- Benchmark suite: three fixed, test-backed starter tasks with deterministic acceptance checks; implemented.
+- Benchmark pairing and summaries: implemented with explicit case/repetition IDs; mismatched, incomplete, or duplicate pairs are surfaced.
+- Reproducible field-test protocol: documented; actual paired Codex-only versus kit runs are NOT RUN.
+- Installer merge strategy with conflict detection and backup-before-write: implemented.
+
 ## v0.4 Visual Configurator
 
 - Static client-side configurator under `configurator/`.
@@ -40,15 +50,12 @@
 
 ## Near term
 
-- More installer merge strategies for pre-existing `.codex/config.toml` files.
-- Machine-readable run telemetry helper.
 - Additional presets for monorepos and data/ML projects.
 - Automated compatibility checks against new Codex agent configuration versions.
 
 ## Later
 
 - Signed release artifacts beyond SHA-256 checksums.
-- Reproducible benchmark suite and local run receipts.
-- Autopilot readiness scoring and richer compatibility diagnostics.
+- Richer compatibility diagnostics.
 
 The project will not silently install third-party browser bridges or modify global Codex configuration.
