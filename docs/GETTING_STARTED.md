@@ -38,6 +38,15 @@ It then shows a configuration summary before writing files. Concurrency `1` is t
 
 The wizard uses only Node.js standard-library modules and adds no runtime dependencies.
 
+## List available presets
+
+The `presets` command prints each Goal preset and its purpose. Use `--json` for a stable machine-readable envelope:
+
+```bash
+npx --yes codex-autopilot-kit presets
+npx --yes codex-autopilot-kit presets --json
+```
+
 If the project already contains an unmanaged `.codex/config.toml`, `init` offers a conservative merge or a backup-and-replace strategy. Merge preserves unrelated settings and stops without writing if a kit-owned value conflicts. Choose `replace` only when you intend to back up and replace that config.
 
 GitHub-source fallback:

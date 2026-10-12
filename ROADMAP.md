@@ -14,8 +14,17 @@
 - Readiness checklist: implemented; ten observable checks, with unavailable Git state reported as unknown.
 - Benchmark suite: three fixed, test-backed starter tasks with deterministic acceptance checks; implemented.
 - Benchmark pairing and summaries: implemented with explicit case/repetition IDs; mismatched, incomplete, or duplicate pairs are surfaced.
-- Reproducible field-test protocol: documented; actual paired Codex-only versus kit runs are NOT RUN.
+- Reproducible field-test protocol: documented; one pair is recorded, with Codex-only PASS and Kit BLOCKED before review. The single pilot is not enough to claim a general performance pattern.
 - Installer merge strategy with conflict detection and backup-before-write: implemented.
+
+## v1.0 readiness gates
+
+- `install`, `init`, `doctor`, `diff`, `status`, `uninstall`, run receipts, local telemetry, `runs`, Readiness Score, and benchmark summaries: implemented in the v0.5 candidate.
+- `presets`: now has a standalone human-readable and JSON command.
+- Stable manifest: implemented and covered by package verification and CLI tests.
+- Codex configuration compatibility: CI validates all rendered config and agent layers against OpenAI's published schema; this does not test runtime model execution or agent quality.
+- Benchmark field evidence: pending at least three comparable paired repetitions per case; do not promote summary averages as causal evidence.
+- Documentation and npm release pipeline: present; v0.5 remains a draft PR and v1.0 has not been declared.
 
 ## v0.4 Visual Configurator
 
@@ -58,7 +67,7 @@
 ## Near term
 
 - Additional presets for monorepos and data/ML projects.
-- Automated compatibility checks against new Codex agent configuration versions.
+- Broader compatibility matrix for older supported Codex releases and runtime delegation behavior.
 
 ## Later
 

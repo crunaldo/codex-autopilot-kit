@@ -166,6 +166,7 @@ codex-autopilot install    Instalar/actualizar la pila del proyecto
 codex-autopilot diff       Comparar estado actual con configuración deseada
 codex-autopilot doctor     Validar archivos, roles, concurrencia y manifest
 codex-autopilot status     Mostrar profile/preset/concurrencia/versión
+codex-autopilot presets    Listar presets de Goal disponibles
 codex-autopilot record     Guardar un receipt local
 codex-autopilot runs       Listar receipts locales
 codex-autopilot readiness  Puntuar señales observables del proyecto
@@ -223,6 +224,7 @@ Consulta [SAFETY.md](docs/SAFETY.md) antes de ejecutar Goals desatendidos en rep
 - [Goal playbook](docs/GOAL_PLAYBOOK.md)
 - [Telemetría](docs/TELEMETRY.md)
 - [Protocolo de benchmarks](docs/BENCHMARKS.md)
+- [Pruebas de compatibilidad con Codex](docs/CODEX_COMPATIBILITY.md)
 - [Seguridad](docs/SAFETY.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Distribución](docs/DISTRIBUTION.md)

@@ -20,6 +20,11 @@ const PROFILES = {
   quality: { explorer: 'high', worker: 'high', reviewer: 'high' },
 };
 const PRESETS = ['generic', 'frontend-visual', 'backend'];
+const PRESET_DESCRIPTIONS = {
+  generic: 'General software tasks with explicit scope, tests, and PASS/BLOCKED outcomes.',
+  'frontend-visual': 'Frontend implementation focused on visual evidence, comparison, and verification.',
+  backend: 'Backend and service work focused on compatibility, data safety, and validation.',
+};
 const CONCURRENCY_CHOICES = [1, 2, 3];
 const CONFIG_STRATEGIES = ['merge','replace'];
 const AGENT_ROLES = ['explorer','worker','reviewer'];
@@ -40,7 +45,7 @@ function parseArgs(argv) {
   }
   return out;
 }
-function help(){ console.log(`Codex Autopilot Kit v${VERSION}\n\nUsage:\n  codex-autopilot init [--target .] [--preset generic] [--profile balanced] [--concurrency 1] [--config-strategy merge|replace] [--yes] [--dry-run]\n  codex-autopilot install [--target .] [--profile balanced] [--preset generic] [--concurrency 1] [--config-strategy merge|replace] [--force] [--dry-run]\n  codex-autopilot diff [--target .] [--profile current] [--preset current] [--concurrency current] [--config-strategy merge|replace] [--json]\n  codex-autopilot doctor [--target .] [--json]\n  codex-autopilot status [--target .] [--json]\n  codex-autopilot uninstall [--target .] [--restore-latest] [--dry-run]\n  codex-autopilot print-goal [--preset generic]\n\nProfiles: ${Object.keys(PROFILES).join(', ')}\nPresets:  ${PRESETS.join(', ')}\nConcurrency: ${CONCURRENCY_CHOICES.join(', ')} (1 recommended)\n\nConfig strategies:\n  merge    Preserve unrelated TOML settings; add kit settings only when safe.\n  replace  Back up and replace the managed config (same behavior as --force).\n`); }
+function help(){ console.log(`Codex Autopilot Kit v${VERSION}\n\nUsage:\n  codex-autopilot init [--target .] [--preset generic] [--profile balanced] [--concurrency 1] [--config-strategy merge|replace] [--yes] [--dry-run]\n  codex-autopilot install [--target .] [--profile balanced] [--preset generic] [--concurrency 1] [--config-strategy merge|replace] [--force] [--dry-run]\n  codex-autopilot presets [--json]\n  codex-autopilot diff [--target .] [--profile current] [--preset current] [--concurrency current] [--config-strategy merge|replace] [--json]\n  codex-autopilot doctor [--target .] [--json]\n  codex-autopilot status [--target .] [--json]\n  codex-autopilot record [--target .] [--result PASS|FIX|BLOCKED] [--json]\n  codex-autopilot runs [--target .] [--json]\n  codex-autopilot readiness [--target .] [--json]\n  codex-autopilot benchmarks [--target .] [--json]\n  codex-autopilot uninstall [--target .] [--restore-latest] [--dry-run]\n  codex-autopilot print-goal [--preset generic]\n\nProfiles: ${Object.keys(PROFILES).join(', ')}\nPresets:  ${PRESETS.join(', ')}\nConcurrency: ${CONCURRENCY_CHOICES.join(', ')} (1 recommended)\n\nConfig strategies:\n  merge    Preserve unrelated TOML settings; add kit settings only when safe.\n  replace  Back up and replace the managed config (same behavior as --force).\n`); }
 function die(message, code=1){ console.error(`ERROR: ${message}`); process.exit(code); }
 function info(message){ console.log(`• ${message}`); }
 function ok(message){ console.log(`✓ ${message}`); }
@@ -770,12 +775,20 @@ function readiness(args){
 function latestBackup(target){ const root=path.join(target,'.codex-autopilot-backups'); if(!exists(root))return null; return fs.readdirSync(root).map(n=>path.join(root,n)).filter(p=>fs.statSync(p).isDirectory()).sort().reverse()[0]||null; }
 function uninstall(args){ const target=targetPath(args),dry=!!args['dry-run'],manifest=loadManifest(target); if(!manifest)die('No managed installation found. Refusing to remove files.',2); const backup=backupManaged(target,dry); if(backup)info(`${dry?'[dry-run] ':''}Safety backup before uninstall: ${backup}`); for(const rel of MANAGED){const p=path.join(target,rel);if(exists(p)){if(!dry)fs.rmSync(p,{force:true});ok(`${dry?'would remove':'removed'} ${rel}`);}} if(args['restore-latest']){const src=latestBackup(target);if(!src)info('No backup found to restore.');else{const m=path.join(src,'backup-manifest.json');if(exists(m)){const bm=JSON.parse(read(m));for(const rel of bm.files||[]){const from=path.join(src,rel),to=path.join(target,rel);if(exists(from)){copyFile(from,to,dry);ok(`${dry?'would restore':'restored'} ${rel}`);}}}}} console.log(dry?'\nDry run only; no files were changed.':'\nUninstall complete.'); }
 function printGoal(args){ const preset=args.preset||'generic'; if(!PRESETS.includes(preset))die(`Unknown preset '${preset}'.`); process.stdout.write(template(`goals/${preset}.md`)); }
+function presetsCommand(args){
+  if(Object.keys(args).some(key=>!['_','json'].includes(key))||args._.length!==1)die('Usage: codex-autopilot presets [--json]');
+  const presets=PRESETS.map(name=>({name,description:PRESET_DESCRIPTIONS[name]}));
+  if(args.json){console.log(JSON.stringify({schemaVersion:JSON_SCHEMA_VERSION,command:'presets',presets},null,2));return;}
+  console.log('Codex Autopilot Kit presets');
+  for(const preset of presets)console.log(`  ${preset.name.padEnd(16)} ${preset.description}`);
+}
 
 const args=parseArgs(process.argv.slice(2));
 const cmd=args._[0];
 if(!cmd||['help','-h','--help'].includes(cmd)){help();runHelp();}
 else if(cmd==='init')await init(args);
 else if(cmd==='install')install(args);
+else if(cmd==='presets')presetsCommand(args);
 else if(cmd==='diff')diffCommand(args);
 else if(cmd==='doctor')doctor(args);
 else if(cmd==='status')status(args);

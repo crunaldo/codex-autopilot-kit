@@ -9,7 +9,7 @@ const required = [
   'templates/core/.codex/config.toml','templates/core/.codex/agents/explorer.toml','templates/core/.codex/agents/worker.toml','templates/core/.codex/agents/reviewer.toml',
   'templates/goals/generic.md','templates/goals/frontend-visual.md','templates/goals/backend.md',
   'docs/GETTING_STARTED.md','docs/ARCHITECTURE.md','docs/MODEL_STRATEGY.md','docs/SAFETY.md','docs/DISTRIBUTION.md',
-  'docs/TELEMETRY.md','docs/BENCHMARKS.md',
+  'docs/TELEMETRY.md','docs/BENCHMARKS.md','docs/CODEX_COMPATIBILITY.md','scripts/test-codex-compat.mjs',
   'benchmarks/README.md',
   'benchmarks/cases/blank-number-cli/TASK.md','benchmarks/cases/blank-number-cli/package.json','benchmarks/cases/blank-number-cli/src/parse-count.mjs','benchmarks/cases/blank-number-cli/test/parse-count.test.mjs',
   'benchmarks/cases/csv-row-escaping/TASK.md','benchmarks/cases/csv-row-escaping/package.json','benchmarks/cases/csv-row-escaping/src/encode-row.mjs','benchmarks/cases/csv-row-escaping/test/encode-row.test.mjs',

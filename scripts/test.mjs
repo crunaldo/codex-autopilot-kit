@@ -21,6 +21,14 @@ const mergeTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-merge-')
 const conflictTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-merge-conflict-'));
 const runsTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-runs-'));
 try {
+  const presetList = json(['presets','--json']);
+  assert(presetList.schemaVersion === 1 && presetList.command === 'presets', 'presets JSON envelope invalid');
+  assert(presetList.presets.map(preset=>preset.name).join(',') === 'generic,frontend-visual,backend', 'presets JSON should list all supported presets in stable order');
+  assert(presetList.presets.every(preset=>typeof preset.description === 'string' && preset.description.length > 0), 'each preset should have a description');
+  const presetText = run(['presets']);
+  assert(presetText.includes('generic') && presetText.includes('frontend-visual') && presetText.includes('backend'), 'human presets output should list every preset');
+  assert(exec(['presets','--unknown','value']).status !== 0, 'presets should reject unsupported flags');
+
   fs.writeFileSync(path.join(tmp, '.gitignore'), 'node_modules/\n');
   run(['install','--target',tmp,'--profile','balanced','--preset','frontend-visual']);
   assert(fs.existsSync(path.join(tmp,'.codex','config.toml')), 'config missing');
@@ -167,7 +175,7 @@ try {
   const incompleteBenchmark = exec(['record','--target',runsTmp,'--preset','generic','--profile','balanced','--result','PASS','--benchmark-mode','codex-only','--case-id','bad-001']);
   assert(incompleteBenchmark.status !== 0 && fs.readdirSync(receiptDir).length === 8, 'benchmark receipts must require mode, case ID, and pair ID');
 
-  console.log('PASS: CLI setup, merge conflicts, run receipts, JSON runs, dry-run, diff, status/doctor, idempotency, backups, presets, and validation tests.');
+  console.log('PASS: CLI setup, preset listing, merge conflicts, run receipts, JSON runs, dry-run, diff, status/doctor, idempotency, backups, and validation tests.');
 } finally {
   fs.rmSync(tmp, { recursive: true, force: true });
   fs.rmSync(initTmp, { recursive: true, force: true });

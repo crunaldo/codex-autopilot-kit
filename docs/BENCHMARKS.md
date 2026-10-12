@@ -33,4 +33,4 @@ The local summary matches receipts by case ID and pair ID. A pair is comparable 
 
 ## Field-test status
 
-The protocol and CLI are available, but no Codex-only versus kit field runs are included with this release candidate. Publish no benchmark result until paired receipts, starting commits, environment details, and the evaluation rubric can be reviewed.
+One local `blank-number-cli` pilot is recorded in [the October field notes](field-notes/2026-10.md): Codex-only passed, while the Kit run reached Explorer and Worker but blocked before Reviewer when local agent orchestration repeatedly failed. Both resulting copies passed the tests on independent verification; the Kit duration was not captured. The starter files were identical, but were uncommitted working-tree files at the recorded starting commit. Treat this as a blocked pilot, not evidence of comparative speed or quality. Repeat from a committed case and complete at least three comparable pairs before making a field claim.

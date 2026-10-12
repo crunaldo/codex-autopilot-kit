@@ -166,6 +166,7 @@ codex-autopilot install    Install/update the project-scoped stack
 codex-autopilot diff       Compare current managed files with desired state
 codex-autopilot doctor     Validate files, roles, concurrency, and manifest
 codex-autopilot status     Show installed profile/preset/concurrency/version
+codex-autopilot presets    List available Goal presets
 codex-autopilot record     Save a local run receipt
 codex-autopilot runs       List local receipts
 codex-autopilot readiness  Score observable project readiness
@@ -223,6 +224,7 @@ Read [SAFETY.md](docs/SAFETY.md) before unattended Goals on valuable repositorie
 - [Goal playbook](docs/GOAL_PLAYBOOK.md)
 - [Telemetry](docs/TELEMETRY.md)
 - [Benchmark protocol](docs/BENCHMARKS.md)
+- [Codex compatibility checks](docs/CODEX_COMPATIBILITY.md)
 - [Safety](docs/SAFETY.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Distribution](docs/DISTRIBUTION.md)
