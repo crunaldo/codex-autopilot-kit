@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.5.0 — 2026-10-12
+
 ### Installer safety
 
 - Added an opt-in `--config-strategy merge` that preserves unrelated project TOML, detects conflicts before writing, and backs up files before a successful merge.

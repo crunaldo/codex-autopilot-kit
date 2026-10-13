@@ -34,8 +34,8 @@ Before creating a release it:
 Release command from an authorized local checkout for the current package version:
 
 ```bash
-git tag v0.4.0
-git push origin v0.4.0
+git tag v0.5.0
+git push origin v0.5.0
 ```
 
 Do not move an existing release tag after publication. Bump the version instead.
