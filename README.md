@@ -232,7 +232,7 @@ Read [SAFETY.md](docs/SAFETY.md) before unattended Goals on valuable repositorie
 
 ## Project status
 
-The v0.5.0 release adds explicit run receipts, local telemetry, the `runs` command, the Autopilot Readiness Score, and a reproducible benchmark suite. Install the current version from npm with `npm install -g codex-autopilot-kit`. See [CHANGELOG.md](CHANGELOG.md) and [ROADMAP.md](ROADMAP.md) for details.
+The v1.0.0 release promotes the project-scoped setup and CLI, stable manifest, local run receipts, readiness checks, and benchmark summaries to the stable line. Install the current version from npm with `npm install -g codex-autopilot-kit`. See [CHANGELOG.md](CHANGELOG.md) and [ROADMAP.md](ROADMAP.md) for release details and benchmark limitations.
 
 Codex Autopilot Kit is a community project and is not affiliated with or endorsed by OpenAI. Product names and trademarks belong to their respective owners.
 

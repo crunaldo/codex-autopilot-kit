@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-13
+
+### Stable release
+
+- Promoted the v0.5 feature set to the stable 1.0 line after the v1.0 readiness audit passed.
+- Verified the published v0.5.1 package from a clean npm install, including setup, CLI checks, receipts, readiness, compatibility, and uninstall.
+- Kept benchmark conclusions descriptive: the documented synthetic field runs do not establish general speed or quality claims.
+
 ## 0.5.1 — 2026-10-13
 
 ### Documentation
