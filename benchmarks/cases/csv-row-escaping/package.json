@@ -1,0 +1,8 @@
+{
+  "name": "benchmark-csv-row-escaping",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

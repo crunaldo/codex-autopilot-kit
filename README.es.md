@@ -85,7 +85,7 @@ npx --yes github:crunaldo/codex-autopilot-kit init --target .
 AUTOPILOT-GOAL.md
 ```
 
-Los conflictos administrados se respaldan antes de ser reemplazados. Una reinstalación que ya coincide es idempotente y no crea backups innecesarios.
+Los conflictos administrados se respaldan antes de ser reemplazados. Para el TOML existente del proyecto, `--config-strategy merge` conserva la configuración ajena al kit y se detiene antes de escribir si hay conflictos con valores administrados. Una reinstalación que ya coincide es idempotente y no crea backups innecesarios.
 
 ## Inspecciona antes de instalar
 
@@ -112,7 +112,7 @@ Diff consumible por máquinas:
 npx --yes codex-autopilot-kit diff --target . --json
 ```
 
-El preview clasifica los archivos como `CREATE`, `REPLACE` o `UNCHANGED`, e informa por separado si `.gitignore` necesita actualización. `--dry-run` y `diff` no escriben archivos.
+El preview clasifica los archivos como `CREATE`, `REPLACE`, `MERGE`, `CONFLICT` o `UNCHANGED`, e informa por separado si `.gitignore` necesita actualización. `--dry-run` y `diff` no escriben archivos.
 
 ## Verifica
 
@@ -166,9 +166,26 @@ codex-autopilot install    Instalar/actualizar la pila del proyecto
 codex-autopilot diff       Comparar estado actual con configuración deseada
 codex-autopilot doctor     Validar archivos, roles, concurrencia y manifest
 codex-autopilot status     Mostrar profile/preset/concurrencia/versión
+codex-autopilot presets    Listar presets de Goal disponibles
+codex-autopilot record     Guardar un receipt local
+codex-autopilot runs       Listar receipts locales
+codex-autopilot readiness  Puntuar señales observables del proyecto
+codex-autopilot benchmarks Resumir benchmarks emparejados
 codex-autopilot uninstall  Eliminar archivos administrados; restauración opcional
 codex-autopilot print-goal Imprimir un Goal preset
 ```
+
+## Receipts locales y readiness
+
+Después de un Goal, registra su resultado y los conteos de roles observados manualmente. El comando crea un archivo JSON en <code>.autopilot/runs/</code>; no captura el texto del Goal, tokens ni rutas de archivos, y no transmite datos por la red.
+
+~~~bash
+npx --yes codex-autopilot-kit record --target . --preset frontend-visual --profile balanced --explorer-calls 1 --worker-calls 3 --reviewer-calls 1 --result PASS --tests PASS --duration-seconds 510 --files-changed 4
+npx --yes codex-autopilot-kit runs --target . --json
+npx --yes codex-autopilot-kit readiness --target . --json
+~~~
+
+Readiness es una lista transparente basada en archivos y estado de Git; no mide la inteligencia del modelo ni garantiza la calidad de una tarea. Los benchmarks requieren IDs de caso y pareja, el mismo preset/profile y un receipt por modo. El resumen es descriptivo y no afirma causalidad. El repositorio incluye tres tareas iniciales fijas en la [suite de benchmarks](benchmarks/README.md). Consulta también [Telemetría](docs/TELEMETRY.md) y [Protocolo de benchmarks](docs/BENCHMARKS.md).
 
 ## Iniciar un Goal autónomo
 
@@ -205,6 +222,9 @@ Consulta [SAFETY.md](docs/SAFETY.md) antes de ejecutar Goals desatendidos en rep
 - [Arquitectura](docs/ARCHITECTURE.md)
 - [Estrategia de modelos](docs/MODEL_STRATEGY.md)
 - [Goal playbook](docs/GOAL_PLAYBOOK.md)
+- [Telemetría](docs/TELEMETRY.md)
+- [Protocolo de benchmarks](docs/BENCHMARKS.md)
+- [Pruebas de compatibilidad con Codex](docs/CODEX_COMPATIBILITY.md)
 - [Seguridad](docs/SAFETY.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Distribución](docs/DISTRIBUTION.md)

@@ -1,0 +1,8 @@
+{
+  "name": "benchmark-slug-normalization",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

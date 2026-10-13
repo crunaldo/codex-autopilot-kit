@@ -38,7 +38,16 @@ It then shows a configuration summary before writing files. Concurrency `1` is t
 
 The wizard uses only Node.js standard-library modules and adds no runtime dependencies.
 
-If the project already contains an unmanaged `.codex/config.toml`, `init` asks before backing it up and replacing kit-managed paths. Declining leaves the project unchanged.
+## List available presets
+
+The `presets` command prints each Goal preset and its purpose. Use `--json` for a stable machine-readable envelope:
+
+```bash
+npx --yes codex-autopilot-kit presets
+npx --yes codex-autopilot-kit presets --json
+```
+
+If the project already contains an unmanaged `.codex/config.toml`, `init` offers a conservative merge or a backup-and-replace strategy. Merge preserves unrelated settings and stops without writing if a kit-owned value conflicts. Choose `replace` only when you intend to back up and replace that config.
 
 GitHub-source fallback:
 
@@ -64,7 +73,13 @@ Use the installer dry run to classify the planned changes:
 npx --yes codex-autopilot-kit install --target . --profile balanced --preset generic --concurrency 1 --dry-run
 ```
 
-The output reports `CREATE`, `REPLACE`, and `UNCHANGED` for managed files and `UPDATE` for `.gitignore` when needed. It does not write files or create backups.
+The output reports `CREATE`, `REPLACE`, `MERGE`, `CONFLICT`, and `UNCHANGED` for managed files and `UPDATE` for `.gitignore` when needed. It does not write files or create backups.
+
+Preview a merge against an existing project config:
+
+```bash
+npx --yes codex-autopilot-kit install --target . --profile balanced --preset generic --concurrency 1 --config-strategy merge --dry-run
+```
 
 `init` also supports `--dry-run`:
 
@@ -78,7 +93,7 @@ npx --yes codex-autopilot-kit init --target . --preset generic --profile balance
 npx --yes codex-autopilot-kit diff --target .
 ```
 
-On an installed project, omitted profile/preset/concurrency values are taken from the current manifest. To inspect a proposed change:
+On an installed project, omitted profile/preset/concurrency values are taken from the current manifest. Add `--config-strategy merge` to inspect a safe merge that preserves unrelated config entries. To inspect a proposed change:
 
 ```bash
 npx --yes codex-autopilot-kit diff --target . --profile quality --preset backend --concurrency 2
@@ -102,7 +117,7 @@ npx --yes codex-autopilot-kit install --target . --profile balanced --preset gen
 
 For frontend/visual work use `--preset frontend-visual`; for services use `--preset backend`.
 
-If the project already contains an unmanaged `.codex/config.toml`, direct installation stops. Review it first with `diff` or `--dry-run`; use `--force` only when you intentionally want the kit to back it up and replace managed paths.
+If the project already contains an unmanaged `.codex/config.toml`, direct installation stops unless you choose `--config-strategy merge` or `--config-strategy replace`. Merge adds missing kit settings while preserving unrelated TOML entries; it refuses duplicate tables and conflicting kit settings before writing anything. A successful merge backs up the existing managed files first. `replace` (or the legacy `--force`) backs up and replaces the config, so use it only when that is intentional.
 
 An install that already matches the requested state is idempotent and does not create unnecessary backups.
 
@@ -162,9 +177,18 @@ OBJECTIVE:
 
 Prefer measurable finish lines over vague instructions such as "keep improving".
 
-## Monitor useful metrics
+## Record a Goal outcome
 
-Track start/end 5-hour quota, start/end weekly quota, duration, worker/reviewer passes, unintended model escalations, and Goal token telemetry as informational data only.
+Run receipts are explicit and local; Codex Autopilot Kit does not observe or intercept Codex sessions. Record the outcome and role-call counts after a Goal:
+
+~~~bash
+npx --yes codex-autopilot-kit record --target . --preset generic --profile balanced --explorer-calls 1 --worker-calls 2 --reviewer-calls 1 --result PASS --tests PASS --duration-seconds 300 --files-changed 3
+npx --yes codex-autopilot-kit runs --target . --json
+~~~
+
+The receipt is saved under <code>.autopilot/runs/</code>. It stores no Goal text, tokens, file paths, or network telemetry. Benchmark receipts require a mode, case ID, and pair ID; reuse one pair ID for both modes in a repetition. See [TELEMETRY.md](TELEMETRY.md) and [BENCHMARKS.md](BENCHMARKS.md).
+
+Check the project setup separately with <code>codex-autopilot readiness --target . --json</code>. Its score is a heuristic checklist, not a quality guarantee.
 
 ## Update
 

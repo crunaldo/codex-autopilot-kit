@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "node scripts/test.mjs && node scripts/test-configurator.mjs",
+    "test:compat": "node scripts/test-codex-compat.mjs",
     "verify": "node scripts/verify-package.mjs",
     "doctor": "node bin/codex-autopilot.mjs doctor --target .",
     "release:check": "npm test && npm run verify && npm pack --dry-run",
@@ -46,6 +47,7 @@
     "bin/",
     "templates/",
     "docs/",
+    "benchmarks/",
     "assets/",
     "install.ps1",
     "install.sh",
@@ -57,5 +59,9 @@
     "INSTALL_FOR_AGENTS.md",
     "llms.txt",
     "CHANGELOG.md"
-  ]
+  ],
+  "devDependencies": {
+    "@iarna/toml": "2.2.5",
+    "ajv": "8.20.0"
+  }
 }

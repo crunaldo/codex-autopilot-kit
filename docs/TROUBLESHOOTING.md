@@ -28,7 +28,13 @@ The default concurrency is one. Wait for/close the completed worker before start
 
 ## Existing `.codex/config.toml`
 
-The installer refuses to replace unmanaged config unless `--force` is passed. Review the backup and merge any project-specific settings you still need.
+For an unmanaged config, preview the conservative strategy first:
+
+```bash
+npx --yes codex-autopilot-kit diff --target . --config-strategy merge --json
+```
+
+Merge preserves unrelated entries and stops without writing if a kit-owned value conflicts or a table cannot be handled safely. Resolve the conflict manually and retry. Use `--config-strategy replace` (or `--force`) only when you intend to back up and replace the config.
 
 ## `codex` command not found
 

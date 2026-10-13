@@ -1,0 +1,600 @@
+{
+  "schema_version": 1,
+  "environment": {
+    "suite_commit": "2cb3ebbfa73d9d45fe3aff512d85bfc20307315d",
+    "node": "v25.2.1",
+    "codex": "codex-cli 0.162.0-alpha.17.2",
+    "model": "gpt-6.1-sol",
+    "reasoning": "high",
+    "profile": "balanced",
+    "preset": "generic",
+    "timeout_seconds": 300,
+    "overrides": [],
+    "planned_pairs": 9
+  },
+  "protocol": {
+    "fixed_fixture_commit": true,
+    "tests": "node --test (same command as npm test in each fixture)",
+    "kit_workflow": "Explorer -> Worker -> Reviewer, sequential; close completed role before spawning next; fork_context:false",
+    "order": "kit first on odd repetitions, codex-only first on even repetitions",
+    "parent_model": "gpt-6.1-sol",
+    "parent_reasoning": "high",
+    "kit_role_model": "gpt-6-luna",
+    "kit_role_reasoning": [
+      "medium",
+      "high",
+      "high"
+    ],
+    "scope": "One source file per fixture; no test/config/dependency changes",
+    "duration": "Wall time from spawning codex exec to process close; excludes fixture setup, installation, and independent post-run verification",
+    "prompts": {
+      "kit": "Solve TASK.md in this project. This is an isolated benchmark: inspect and modify only this project, do not read global memories or other projects, do not use network or MCP tools, do not change tests, TASK.md, package.json, configuration, or dependencies. Only edit the source file allowed by TASK.md. Run node --test before and after. Do not commit or push. Finish with PASS or BLOCKED, exact changed files, test results, and any blockers. Follow AUTOPILOT-GOAL.md using the configured explorer, worker, and reviewer roles sequentially, one active at a time. Use fork_context:false for each named role. Close each completed agent before spawning the next. Explorer inspects, Worker implements, Reviewer independently reviews after tests pass. Wait for reviewer completion and report its verdict. No nested subagents.",
+      "codex-only": "Solve TASK.md in this project. This is an isolated benchmark: inspect and modify only this project, do not read global memories or other projects, do not use network or MCP tools, do not change tests, TASK.md, package.json, configuration, or dependencies. Only edit the source file allowed by TASK.md. Run node --test before and after. Do not commit or push. Finish with PASS or BLOCKED, exact changed files, test results, and any blockers. Work directly without spawning subagents; inspect, implement, test, and review the final change yourself."
+    },
+    "supplement": "Protocol addendum, before supplemental execution: after the original 18 slots, run exactly one additional paired repetition blank-number-cli-4 with unchanged fixtures, settings and 300-second timeout. This addresses the quota-interrupted third repetition. Preserve all original outcomes. Do not replace or retry this supplemental pair if it fails. Its baseline-first order follows the existing even-repetition rule. Report original and supplemental outcomes separately.",
+    "failure_handling": "Preserve every started attempt, including quota failures and timeouts; do not rerun failures in place. Resume only previously unstarted slots."
+  },
+  "runs": [
+    {
+      "case_id": "blank-number-cli",
+      "pair_id": "blank-number-cli-1",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 186.94,
+      "started_at": "2026-10-12T22:21:36.074Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/parse-count.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "8f1d7d30ec3dec9ecd8917cb20217cbc9437f09adbfc910b73c3bfbd7778bbd3",
+        "package.json": "d9ed5372d6293f20f34c842e3c8903f42e99490873568850a59e1d15a0653729",
+        "src/parse-count.mjs": "ca52f45b525d8129e36abdd54a0d4916cc342a88402d68a398c15be3db58e53f",
+        "test/parse-count.test.mjs": "66f15c0c692933b03d0c93d49518b968ef177b7c6f3635af61c1496eb027ad83"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 3,
+      "final_closed_agent_pass": true,
+      "cohort": "original"
+    },
+    {
+      "case_id": "blank-number-cli",
+      "pair_id": "blank-number-cli-1",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 54.295,
+      "started_at": "2026-10-12T22:24:44.233Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/parse-count.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "8f1d7d30ec3dec9ecd8917cb20217cbc9437f09adbfc910b73c3bfbd7778bbd3",
+        "package.json": "d9ed5372d6293f20f34c842e3c8903f42e99490873568850a59e1d15a0653729",
+        "src/parse-count.mjs": "ca52f45b525d8129e36abdd54a0d4916cc342a88402d68a398c15be3db58e53f",
+        "test/parse-count.test.mjs": "66f15c0c692933b03d0c93d49518b968ef177b7c6f3635af61c1496eb027ad83"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    },
+    {
+      "case_id": "blank-number-cli",
+      "pair_id": "blank-number-cli-2",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 241.944,
+      "started_at": "2026-10-12T22:27:09.546Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/parse-count.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "8f1d7d30ec3dec9ecd8917cb20217cbc9437f09adbfc910b73c3bfbd7778bbd3",
+        "package.json": "d9ed5372d6293f20f34c842e3c8903f42e99490873568850a59e1d15a0653729",
+        "src/parse-count.mjs": "ca52f45b525d8129e36abdd54a0d4916cc342a88402d68a398c15be3db58e53f",
+        "test/parse-count.test.mjs": "66f15c0c692933b03d0c93d49518b968ef177b7c6f3635af61c1496eb027ad83"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 3,
+      "final_closed_agent_pass": true,
+      "cohort": "original"
+    },
+    {
+      "case_id": "blank-number-cli",
+      "pair_id": "blank-number-cli-2",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 58.66,
+      "started_at": "2026-10-12T22:26:09.165Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/parse-count.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "8f1d7d30ec3dec9ecd8917cb20217cbc9437f09adbfc910b73c3bfbd7778bbd3",
+        "package.json": "d9ed5372d6293f20f34c842e3c8903f42e99490873568850a59e1d15a0653729",
+        "src/parse-count.mjs": "ca52f45b525d8129e36abdd54a0d4916cc342a88402d68a398c15be3db58e53f",
+        "test/parse-count.test.mjs": "66f15c0c692933b03d0c93d49518b968ef177b7c6f3635af61c1496eb027ad83"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    },
+    {
+      "case_id": "blank-number-cli",
+      "pair_id": "blank-number-cli-3",
+      "mode": "codex-autopilot-kit",
+      "result": "BLOCKED",
+      "tests": "FAIL",
+      "duration_seconds": 12.412,
+      "started_at": "2026-10-12T22:31:12.496Z",
+      "process_exit": 1,
+      "timeout": false,
+      "turn_completed": false,
+      "failure_reason": "Codex usage limit reached",
+      "immutable_inputs_preserved": true,
+      "changes_allowed": false,
+      "changed_files": [],
+      "initial_sha256": {
+        "TASK.md": "8f1d7d30ec3dec9ecd8917cb20217cbc9437f09adbfc910b73c3bfbd7778bbd3",
+        "package.json": "d9ed5372d6293f20f34c842e3c8903f42e99490873568850a59e1d15a0653729",
+        "src/parse-count.mjs": "ca52f45b525d8129e36abdd54a0d4916cc342a88402d68a398c15be3db58e53f",
+        "test/parse-count.test.mjs": "66f15c0c692933b03d0c93d49518b968ef177b7c6f3635af61c1496eb027ad83"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": false,
+      "cohort": "original"
+    },
+    {
+      "case_id": "blank-number-cli",
+      "pair_id": "blank-number-cli-3",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 60.991,
+      "started_at": "2026-10-12T23:17:46.449Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/parse-count.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "8f1d7d30ec3dec9ecd8917cb20217cbc9437f09adbfc910b73c3bfbd7778bbd3",
+        "package.json": "d9ed5372d6293f20f34c842e3c8903f42e99490873568850a59e1d15a0653729",
+        "src/parse-count.mjs": "ca52f45b525d8129e36abdd54a0d4916cc342a88402d68a398c15be3db58e53f",
+        "test/parse-count.test.mjs": "66f15c0c692933b03d0c93d49518b968ef177b7c6f3635af61c1496eb027ad83"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    },
+    {
+      "case_id": "blank-number-cli",
+      "pair_id": "blank-number-cli-4",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 133.018,
+      "started_at": "2026-10-12T23:43:40.142Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/parse-count.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "8f1d7d30ec3dec9ecd8917cb20217cbc9437f09adbfc910b73c3bfbd7778bbd3",
+        "package.json": "d9ed5372d6293f20f34c842e3c8903f42e99490873568850a59e1d15a0653729",
+        "src/parse-count.mjs": "ca52f45b525d8129e36abdd54a0d4916cc342a88402d68a398c15be3db58e53f",
+        "test/parse-count.test.mjs": "66f15c0c692933b03d0c93d49518b968ef177b7c6f3635af61c1496eb027ad83"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 3,
+      "final_closed_agent_pass": true,
+      "cohort": "supplemental"
+    },
+    {
+      "case_id": "blank-number-cli",
+      "pair_id": "blank-number-cli-4",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 62.141,
+      "started_at": "2026-10-12T23:42:36.977Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/parse-count.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "8f1d7d30ec3dec9ecd8917cb20217cbc9437f09adbfc910b73c3bfbd7778bbd3",
+        "package.json": "d9ed5372d6293f20f34c842e3c8903f42e99490873568850a59e1d15a0653729",
+        "src/parse-count.mjs": "ca52f45b525d8129e36abdd54a0d4916cc342a88402d68a398c15be3db58e53f",
+        "test/parse-count.test.mjs": "66f15c0c692933b03d0c93d49518b968ef177b7c6f3635af61c1496eb027ad83"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "supplemental"
+    },
+    {
+      "case_id": "csv-row-escaping",
+      "pair_id": "csv-row-escaping-1",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 129.905,
+      "started_at": "2026-10-12T23:18:48.477Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/encode-row.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "4e24329366d9abedd3c06a3e157bc12648bf7b54201b3b1041eb3bc587ba7ba4",
+        "package.json": "b53327f8188b713b259e6c5759dfa0a82bdb2c1d190386e1949d13d7ca714b53",
+        "src/encode-row.mjs": "b81ed75908241e30e102901847f9ceaeaf45dc3939b16ead33ec124861975c56",
+        "test/encode-row.test.mjs": "d06f59e82fc57bc008f1d23a55d63e6fc444159082aad8753afc2be8a0118a47"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 3,
+      "final_closed_agent_pass": true,
+      "cohort": "original"
+    },
+    {
+      "case_id": "csv-row-escaping",
+      "pair_id": "csv-row-escaping-1",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 62.666,
+      "started_at": "2026-10-12T23:20:59.338Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/encode-row.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "4e24329366d9abedd3c06a3e157bc12648bf7b54201b3b1041eb3bc587ba7ba4",
+        "package.json": "b53327f8188b713b259e6c5759dfa0a82bdb2c1d190386e1949d13d7ca714b53",
+        "src/encode-row.mjs": "b81ed75908241e30e102901847f9ceaeaf45dc3939b16ead33ec124861975c56",
+        "test/encode-row.test.mjs": "d06f59e82fc57bc008f1d23a55d63e6fc444159082aad8753afc2be8a0118a47"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    },
+    {
+      "case_id": "csv-row-escaping",
+      "pair_id": "csv-row-escaping-2",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 127.637,
+      "started_at": "2026-10-12T23:22:44.529Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/encode-row.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "4e24329366d9abedd3c06a3e157bc12648bf7b54201b3b1041eb3bc587ba7ba4",
+        "package.json": "b53327f8188b713b259e6c5759dfa0a82bdb2c1d190386e1949d13d7ca714b53",
+        "src/encode-row.mjs": "b81ed75908241e30e102901847f9ceaeaf45dc3939b16ead33ec124861975c56",
+        "test/encode-row.test.mjs": "d06f59e82fc57bc008f1d23a55d63e6fc444159082aad8753afc2be8a0118a47"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 3,
+      "final_closed_agent_pass": true,
+      "cohort": "original"
+    },
+    {
+      "case_id": "csv-row-escaping",
+      "pair_id": "csv-row-escaping-2",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 40.535,
+      "started_at": "2026-10-12T23:22:02.910Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/encode-row.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "4e24329366d9abedd3c06a3e157bc12648bf7b54201b3b1041eb3bc587ba7ba4",
+        "package.json": "b53327f8188b713b259e6c5759dfa0a82bdb2c1d190386e1949d13d7ca714b53",
+        "src/encode-row.mjs": "b81ed75908241e30e102901847f9ceaeaf45dc3939b16ead33ec124861975c56",
+        "test/encode-row.test.mjs": "d06f59e82fc57bc008f1d23a55d63e6fc444159082aad8753afc2be8a0118a47"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    },
+    {
+      "case_id": "csv-row-escaping",
+      "pair_id": "csv-row-escaping-3",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 128.74,
+      "started_at": "2026-10-12T23:24:53.187Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/encode-row.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "4e24329366d9abedd3c06a3e157bc12648bf7b54201b3b1041eb3bc587ba7ba4",
+        "package.json": "b53327f8188b713b259e6c5759dfa0a82bdb2c1d190386e1949d13d7ca714b53",
+        "src/encode-row.mjs": "b81ed75908241e30e102901847f9ceaeaf45dc3939b16ead33ec124861975c56",
+        "test/encode-row.test.mjs": "d06f59e82fc57bc008f1d23a55d63e6fc444159082aad8753afc2be8a0118a47"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 3,
+      "final_closed_agent_pass": true,
+      "cohort": "original"
+    },
+    {
+      "case_id": "csv-row-escaping",
+      "pair_id": "csv-row-escaping-3",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 37.262,
+      "started_at": "2026-10-12T23:27:02.872Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/encode-row.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "4e24329366d9abedd3c06a3e157bc12648bf7b54201b3b1041eb3bc587ba7ba4",
+        "package.json": "b53327f8188b713b259e6c5759dfa0a82bdb2c1d190386e1949d13d7ca714b53",
+        "src/encode-row.mjs": "b81ed75908241e30e102901847f9ceaeaf45dc3939b16ead33ec124861975c56",
+        "test/encode-row.test.mjs": "d06f59e82fc57bc008f1d23a55d63e6fc444159082aad8753afc2be8a0118a47"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    },
+    {
+      "case_id": "slug-normalization",
+      "pair_id": "slug-normalization-1",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 252.572,
+      "started_at": "2026-10-12T23:27:41.230Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/slugify.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "b544b16246284034b869d089fb788b6b77d36f47affcc0f7e8dfe5f261997a4d",
+        "package.json": "be1c5e53487daba7587c79d672a5b15f7d2a3daff8d8a675ba4e66ea9af1e19a",
+        "src/slugify.mjs": "8b0bc1fe5ac2cd2dcce82b9687e38e5384468d74930256a335ebcc4019179af4",
+        "test/slugify.test.mjs": "84b7b0164abeba2b486612cca4cbc85e809661436d4c09eab1f0949704e71c4b"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 5,
+      "final_closed_agent_pass": true,
+      "cohort": "original"
+    },
+    {
+      "case_id": "slug-normalization",
+      "pair_id": "slug-normalization-1",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 51.646,
+      "started_at": "2026-10-12T23:31:54.738Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/slugify.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "b544b16246284034b869d089fb788b6b77d36f47affcc0f7e8dfe5f261997a4d",
+        "package.json": "be1c5e53487daba7587c79d672a5b15f7d2a3daff8d8a675ba4e66ea9af1e19a",
+        "src/slugify.mjs": "8b0bc1fe5ac2cd2dcce82b9687e38e5384468d74930256a335ebcc4019179af4",
+        "test/slugify.test.mjs": "84b7b0164abeba2b486612cca4cbc85e809661436d4c09eab1f0949704e71c4b"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    },
+    {
+      "case_id": "slug-normalization",
+      "pair_id": "slug-normalization-2",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 287.237,
+      "started_at": "2026-10-12T23:33:43.120Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/slugify.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "b544b16246284034b869d089fb788b6b77d36f47affcc0f7e8dfe5f261997a4d",
+        "package.json": "be1c5e53487daba7587c79d672a5b15f7d2a3daff8d8a675ba4e66ea9af1e19a",
+        "src/slugify.mjs": "8b0bc1fe5ac2cd2dcce82b9687e38e5384468d74930256a335ebcc4019179af4",
+        "test/slugify.test.mjs": "84b7b0164abeba2b486612cca4cbc85e809661436d4c09eab1f0949704e71c4b"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 5,
+      "final_closed_agent_pass": true,
+      "cohort": "original"
+    },
+    {
+      "case_id": "slug-normalization",
+      "pair_id": "slug-normalization-2",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 54.81,
+      "started_at": "2026-10-12T23:32:47.286Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/slugify.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "b544b16246284034b869d089fb788b6b77d36f47affcc0f7e8dfe5f261997a4d",
+        "package.json": "be1c5e53487daba7587c79d672a5b15f7d2a3daff8d8a675ba4e66ea9af1e19a",
+        "src/slugify.mjs": "8b0bc1fe5ac2cd2dcce82b9687e38e5384468d74930256a335ebcc4019179af4",
+        "test/slugify.test.mjs": "84b7b0164abeba2b486612cca4cbc85e809661436d4c09eab1f0949704e71c4b"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    },
+    {
+      "case_id": "slug-normalization",
+      "pair_id": "slug-normalization-3",
+      "mode": "codex-autopilot-kit",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 173.287,
+      "started_at": "2026-10-12T23:38:31.403Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/slugify.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "b544b16246284034b869d089fb788b6b77d36f47affcc0f7e8dfe5f261997a4d",
+        "package.json": "be1c5e53487daba7587c79d672a5b15f7d2a3daff8d8a675ba4e66ea9af1e19a",
+        "src/slugify.mjs": "8b0bc1fe5ac2cd2dcce82b9687e38e5384468d74930256a335ebcc4019179af4",
+        "test/slugify.test.mjs": "84b7b0164abeba2b486612cca4cbc85e809661436d4c09eab1f0949704e71c4b"
+      },
+      "agent_spawn_count": 3,
+      "completed_closed_agent_count": 3,
+      "final_closed_agent_pass": true,
+      "cohort": "original"
+    },
+    {
+      "case_id": "slug-normalization",
+      "pair_id": "slug-normalization-3",
+      "mode": "codex-only",
+      "result": "PASS",
+      "tests": "PASS",
+      "duration_seconds": 42.361,
+      "started_at": "2026-10-12T23:41:25.612Z",
+      "process_exit": 0,
+      "timeout": false,
+      "turn_completed": true,
+      "failure_reason": null,
+      "immutable_inputs_preserved": true,
+      "changes_allowed": true,
+      "changed_files": [
+        "src/slugify.mjs"
+      ],
+      "initial_sha256": {
+        "TASK.md": "b544b16246284034b869d089fb788b6b77d36f47affcc0f7e8dfe5f261997a4d",
+        "package.json": "be1c5e53487daba7587c79d672a5b15f7d2a3daff8d8a675ba4e66ea9af1e19a",
+        "src/slugify.mjs": "8b0bc1fe5ac2cd2dcce82b9687e38e5384468d74930256a335ebcc4019179af4",
+        "test/slugify.test.mjs": "84b7b0164abeba2b486612cca4cbc85e809661436d4c09eab1f0949704e71c4b"
+      },
+      "agent_spawn_count": 0,
+      "completed_closed_agent_count": 0,
+      "final_closed_agent_pass": null,
+      "cohort": "original"
+    }
+  ],
+  "successful_workflow_pairs": 9,
+  "recorded_pairs": 10,
+  "pairs_with_both_outcomes": 10
+}

@@ -71,6 +71,10 @@ The public configurator is a static client-side UI. Its shareable URL encodes `p
 - `diff` — inspection-only current-vs-desired comparison.
 - `doctor` — validate managed files and role configuration; supports `--json`.
 - `status` — inspect installed manifest; supports `--json`.
+- `record` — save a local structured run receipt; no session interception or upload.
+- `runs` — list local receipts; supports `--json`.
+- `readiness` — inspect project readiness checks; supports `--json`.
+- `benchmarks` — summarize paired local receipts by case ID and mode.
 - `uninstall` — remove managed files; can restore latest backup.
 - `print-goal` — print a Goal preset.
 
@@ -98,6 +102,9 @@ No profile enables maximum reasoning automatically.
 - `docs/GETTING_STARTED.md` — installation and first-run guide.
 - `docs/ARCHITECTURE.md` — architecture and role separation.
 - `docs/MODEL_STRATEGY.md` — model/reasoning strategy.
+- `docs/TELEMETRY.md` — local receipts, privacy, and JSON output.
+- `docs/BENCHMARKS.md` — reproducible paired comparison protocol.
+- `benchmarks/README.md` — three fixed, test-backed starter cases.
 - `docs/GOAL_PLAYBOOK.md` — Goal usage patterns.
 - `docs/SAFETY.md` — safety model.
 - `docs/TROUBLESHOOTING.md` — troubleshooting.

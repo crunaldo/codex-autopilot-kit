@@ -85,7 +85,7 @@ npx --yes github:crunaldo/codex-autopilot-kit init --target .
 AUTOPILOT-GOAL.md
 ```
 
-Managed conflicts are backed up before replacement. A matching reinstall is idempotent and creates no unnecessary backups.
+Managed conflicts are backed up before replacement. For existing project TOML, `--config-strategy merge` preserves unrelated settings and aborts before writing if kit-owned values conflict. A matching reinstall is idempotent and creates no unnecessary backups.
 
 ## Inspect before installing
 
@@ -112,7 +112,7 @@ Machine-readable diff:
 npx --yes codex-autopilot-kit diff --target . --json
 ```
 
-The preview classifies managed paths as `CREATE`, `REPLACE`, or `UNCHANGED`, and reports `.gitignore` updates separately. `--dry-run` and `diff` do not write files.
+The preview classifies managed paths as `CREATE`, `REPLACE`, `MERGE`, `CONFLICT`, or `UNCHANGED`, and reports `.gitignore` updates separately. `--dry-run` and `diff` do not write files.
 
 ## Verify
 
@@ -166,9 +166,26 @@ codex-autopilot install    Install/update the project-scoped stack
 codex-autopilot diff       Compare current managed files with desired state
 codex-autopilot doctor     Validate files, roles, concurrency, and manifest
 codex-autopilot status     Show installed profile/preset/concurrency/version
+codex-autopilot presets    List available Goal presets
+codex-autopilot record     Save a local run receipt
+codex-autopilot runs       List local receipts
+codex-autopilot readiness  Score observable project readiness
+codex-autopilot benchmarks Summarize paired benchmark receipts
 codex-autopilot uninstall  Remove managed files; optionally restore backup
 codex-autopilot print-goal Print a Goal preset to stdout
 ```
+
+## Local run receipts and readiness
+
+After a Goal, record its outcome and manually observed role counts. The command writes one JSON file under <code>.autopilot/runs/</code>; it does not capture Goal text, tokens, file paths, or send data over the network.
+
+~~~bash
+npx --yes codex-autopilot-kit record --target . --preset frontend-visual --profile balanced --explorer-calls 1 --worker-calls 3 --reviewer-calls 1 --result PASS --tests PASS --duration-seconds 510 --files-changed 4
+npx --yes codex-autopilot-kit runs --target . --json
+npx --yes codex-autopilot-kit readiness --target . --json
+~~~
+
+Readiness is a transparent checklist based on files and Git state, not a measure of model intelligence or a guarantee of task quality. Benchmark comparisons require matching case and pair IDs, the same preset/profile, and one receipt per mode; the summary is descriptive and makes no causal claim. The repository includes three fixed starter tasks in [the benchmark suite](benchmarks/README.md). See also [Telemetry](docs/TELEMETRY.md) and [Benchmark protocol](docs/BENCHMARKS.md).
 
 ## Start an autonomous Goal
 
@@ -205,6 +222,9 @@ Read [SAFETY.md](docs/SAFETY.md) before unattended Goals on valuable repositorie
 - [Architecture](docs/ARCHITECTURE.md)
 - [Model strategy](docs/MODEL_STRATEGY.md)
 - [Goal playbook](docs/GOAL_PLAYBOOK.md)
+- [Telemetry](docs/TELEMETRY.md)
+- [Benchmark protocol](docs/BENCHMARKS.md)
+- [Codex compatibility checks](docs/CODEX_COMPATIBILITY.md)
 - [Safety](docs/SAFETY.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Distribution](docs/DISTRIBUTION.md)

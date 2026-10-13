@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### Installer safety
+
+- Added an opt-in `--config-strategy merge` that preserves unrelated project TOML, detects conflicts before writing, and backs up files before a successful merge.
+- Kept backup-and-replace available as an explicit `--config-strategy replace` choice; `--force` remains a compatibility alias.
+- Added merge-aware dry runs, diffs, and machine-readable conflict reporting.
+
+### Make it measurable
+
+- Added explicit local run receipts with role counts, outcomes, test status, and optional benchmark metadata.
+- Added `runs`, a machine-readable readiness checklist, and paired benchmark summaries.
+- Added three fixed, test-backed benchmark cases and a reproducible field-test protocol; the first pilot is documented as blocked before review and supports no performance claim.
+- Added a standalone `presets` command and CI validation of generated Codex configuration against OpenAI's published schema.
+
 ## 0.4.0 — 2026-10-12
 
 ### Visual Configurator
