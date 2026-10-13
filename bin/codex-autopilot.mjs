@@ -186,6 +186,7 @@ function mergeConfigToml(current,desired,{allowManagedUpdates=false}={}){
   for(const assignment of currentDocument.rootAssignments)if(assignment.keyParts[0]==='agents')conflicts.push(`root-level agents assignment '${assignment.keyParts.join('.')}' cannot be merged safely.`);
   for(const table of currentTables)if(table.path.length===1&&table.path[0]==='agents'){
     for(const assignment of table.nestedAssignments)if(AGENT_ROLES.includes(assignment.keyParts[0]))conflicts.push(`dotted assignment '${assignment.keyParts.join('.')}' in [agents] conflicts with a kit role table.`);
+    for(const role of AGENT_ROLES)if(table.assignments.has(role))conflicts.push(`assignment '${role}' in [agents] conflicts with a kit role table.`);
   }
 
   for(const wantedTable of wanted){
@@ -569,8 +570,8 @@ function status(args){
   if(args.json)console.log(JSON.stringify({schemaVersion:JSON_SCHEMA_VERSION,command:'status',installed:true,target,kitVersion:VERSION,manifest},null,2));
   else{console.log(`Codex Autopilot Kit v${manifest.version}`);console.log(`Target:      ${target}`);console.log(`Profile:     ${manifest.profile}`);console.log(`Preset:      ${manifest.preset}`);console.log(`Concurrency: ${manifest.concurrency??1}`);console.log(`Installed:   ${manifest.installedAt}`);if(manifest.updatedAt)console.log(`Updated:     ${manifest.updatedAt}`);for(const [role,cfg] of Object.entries(manifest.roles||{}))console.log(`${role}: ${cfg.model} / ${cfg.reasoning}${cfg.readOnly?' / read-only':''}`);}
 }
-function nonNegativeInteger(value,label,defaultValue=0){
-  if(value===undefined)return defaultValue;
+function nonNegativeInteger(value,label){
+  if(value===undefined)return undefined;
   if(!/^\d+$/.test(String(value)))die(label+' must be a non-negative integer.');
   const parsed=Number(value);
   if(!Number.isSafeInteger(parsed))die(label+' must be a safe integer.');
@@ -641,7 +642,7 @@ function validRunReceipt(receipt){
       typeof receipt?.pair_id==='string'&&/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(receipt.pair_id));
   return receipt?.schemaVersion===1&&typeof receipt.recorded_at==='string'&&!Number.isNaN(Date.parse(receipt.recorded_at))&&
     PRESETS.includes(receipt.preset)&&PROFILES[receipt.profile]&&RUN_RESULTS.includes(receipt.result)&&TEST_RESULTS.includes(receipt.tests)&&
-    integerFields.every(key=>Number.isSafeInteger(receipt[key])&&receipt[key]>=0)&&
+    integerFields.every(key=>receipt[key]===undefined||Number.isSafeInteger(receipt[key])&&receipt[key]>=0)&&
     optionalIntegerFields.every(key=>receipt[key]===undefined||Number.isSafeInteger(receipt[key])&&receipt[key]>=0)&&
     (receipt.duration_seconds===undefined||typeof receipt.duration_seconds==='number'&&Number.isFinite(receipt.duration_seconds)&&receipt.duration_seconds>=0)&&benchmarkFields;
 }
@@ -669,7 +670,7 @@ function runsCommand(args){
    console.log('Codex Autopilot Kit runs');
   if(!runs.length){console.log('No run receipts found.');return;}
   console.log('DATE                      PRESET           RESULT   WORKERS');
-  for(const run of runs)console.log(run.recorded_at.replace('T',' ').replace(/\.\d{3}Z$/,' UTC').padEnd(26)+' '+run.preset.padEnd(16)+' '+run.result.padEnd(8)+' '+run.worker_calls);
+  for(const run of runs)console.log(run.recorded_at.replace('T',' ').replace(/\.\d{3}Z$/,' UTC').padEnd(26)+' '+run.preset.padEnd(16)+' '+run.result.padEnd(8)+' '+(run.worker_calls??'n/a'));
 }
 function runHelp(){
   console.log('\nRun receipts:\n  codex-autopilot record --target . --preset generic --profile balanced --result PASS [--tests PASS|FAIL|NOT_RUN] [--explorer-calls 0] [--worker-calls 0] [--reviewer-calls 0] [--duration-seconds N] [--files-changed N] [--json]\n  codex-autopilot runs [--target .] [--json]\n  codex-autopilot readiness [--target .] [--json]\nReceipts are stored locally in .autopilot/runs; Goal text, tokens, and network data are not recorded.');

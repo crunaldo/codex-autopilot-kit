@@ -20,6 +20,7 @@ const emptyTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-empty-')
 const mergeTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-merge-'));
 const conflictTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-merge-conflict-'));
 const runsTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-runs-'));
+const unreportedRunsTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-autopilot-unreported-runs-'));
 try {
   const presetList = json(['presets','--json']);
   assert(presetList.schemaVersion === 1 && presetList.command === 'presets', 'presets JSON envelope invalid');
@@ -127,6 +128,12 @@ try {
   assert(dottedInstall.status===3&&dottedInstall.stderr.includes('root-level agents assignment'), 'merge must reject root dotted agents assignments');
   assert(fs.readFileSync(conflictConfigPath,'utf8')===dottedConfig&&!fs.existsSync(path.join(conflictTmp,'.codex','agents')), 'root dotted conflict must not write project files');
 
+  const inlineConfig='[agents]\nenabled = false\nexplorer = { model = "custom-model" }\n';
+  fs.writeFileSync(conflictConfigPath,inlineConfig);
+  const inlineInstall=exec(['install','--target',conflictTmp,'--profile','balanced','--preset','generic','--concurrency','1','--config-strategy','merge']);
+  assert(inlineInstall.status===3&&inlineInstall.stderr.includes("assignment 'explorer' in [agents]"), 'merge must reject an inline role assignment that conflicts with a kit role table');
+  assert(fs.readFileSync(conflictConfigPath,'utf8')===inlineConfig&&!fs.existsSync(path.join(conflictTmp,'.codex','agents')), 'inline role conflict must not write project files');
+
   const emptyStatus = exec(['status','--target',emptyTmp,'--json']);
   assert(emptyStatus.status === 2, 'uninstalled status json should exit 2');
   const emptyStatusJson = JSON.parse(emptyStatus.stdout);
@@ -134,6 +141,12 @@ try {
 
   const emptyRuns = json(['runs','--target',runsTmp,'--json']);
   assert(emptyRuns.command === 'runs' && emptyRuns.count === 0 && emptyRuns.runs.length === 0, 'empty run list JSON contract invalid');
+  const unreportedRecord = json(['record','--target',unreportedRunsTmp,'--preset','generic','--profile','balanced','--result','PASS','--tests','NOT_RUN','--json']);
+  assert(!('explorer_calls' in unreportedRecord.receipt)&&!('worker_calls' in unreportedRecord.receipt)&&!('reviewer_calls' in unreportedRecord.receipt), 'omitted role counts must remain unrecorded');
+  const unreportedReceiptPath = path.join(unreportedRunsTmp,'.autopilot','runs',fs.readdirSync(path.join(unreportedRunsTmp,'.autopilot','runs'))[0]);
+  const unreportedSaved = JSON.parse(fs.readFileSync(unreportedReceiptPath,'utf8'));
+  assert(!('explorer_calls' in unreportedSaved)&&!('worker_calls' in unreportedSaved)&&!('reviewer_calls' in unreportedSaved), 'saved receipt must omit unreported role counts');
+  assert(run(['runs','--target',unreportedRunsTmp]).includes('n/a'), 'human run list should label an unreported worker count as unavailable');
   const recordJson = json(['record','--target',runsTmp,'--preset','frontend-visual','--profile','balanced','--explorer-calls','1','--worker-calls','3','--reviewer-calls','1','--result','PASS','--tests','PASS','--duration-seconds','510.5','--files-changed','4','--iterations','3','--reviewer-findings','0','--benchmark-mode','codex-autopilot-kit','--case-id','smoke-001','--pair-id','repeat-01','--json']);
   assert(recordJson.command === 'record' && recordJson.receipt.schemaVersion === 1, 'record JSON contract invalid');
   assert(recordJson.receipt.preset === 'frontend-visual' && recordJson.receipt.profile === 'balanced', 'receipt configuration fields missing');
@@ -184,4 +197,5 @@ try {
   fs.rmSync(mergeTmp, { recursive: true, force: true });
   fs.rmSync(conflictTmp, { recursive: true, force: true });
   fs.rmSync(runsTmp, { recursive: true, force: true });
+  fs.rmSync(unreportedRunsTmp, { recursive: true, force: true });
 }
