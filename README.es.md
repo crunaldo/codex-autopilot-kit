@@ -232,7 +232,7 @@ Consulta [SAFETY.md](docs/SAFETY.md) antes de ejecutar Goals desatendidos en rep
 
 ## Estado del proyecto
 
-La versión v0.5.0 incorpora recibos explícitos de ejecución, telemetría local, el comando `runs`, Autopilot Readiness Score y una suite reproducible de benchmarks. Instala la versión vigente desde npm con `npm install -g codex-autopilot-kit`. Consulta [CHANGELOG.md](CHANGELOG.md) y [ROADMAP.md](ROADMAP.md) para más detalles.
+La versión v1.0.0 consolida como estable la configuración y el CLI por proyecto, el manifiesto estable, los recibos locales de ejecución, las comprobaciones de readiness y los resúmenes de benchmarks. Instala la versión vigente desde npm con `npm install -g codex-autopilot-kit`. Consulta [CHANGELOG.md](CHANGELOG.md) y [ROADMAP.md](ROADMAP.md) para conocer el lanzamiento y las limitaciones de los benchmarks.
 
 Codex Autopilot Kit es un proyecto comunitario y no está afiliado ni respaldado por OpenAI. Los nombres de productos y marcas pertenecen a sus respectivos titulares.
 
