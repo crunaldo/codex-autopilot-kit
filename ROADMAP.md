@@ -3,11 +3,11 @@
 ## v0.4 Make it visible — released; visibility follow-ups remain
 
 - GitHub Release `v0.4.0` includes the package tarball and its `.sha256` checksum.
-- npm `latest` is `0.4.0`.
+- At the v0.4.0 release, npm `latest` pointed to `0.4.0`.
 - GitHub repository About metadata is set: project description, GitHub Pages website, and eight discovery topics (`codex`, `ai-agents`, `multi-agent`, `agent-orchestration`, `developer-tools`, `automation`, `cli`, `openai`).
 - The [Awesome Agent Orchestrators submission](https://github.com/andyrewlee/awesome-agent-orchestrators/pull/293) is open and awaiting maintainer review.
 
-## v0.5 Make it measurable — implementation merged; release candidate in preparation
+## v0.5 Make it measurable — released as v0.5.0
 
 - Run receipts and local telemetry: implemented; records are explicit, local, and exclude Goal text and tokens.
 - `runs` listing and JSON envelope: implemented.
@@ -19,12 +19,12 @@
 
 ## v1.0 readiness gates
 
-- `install`, `init`, `doctor`, `diff`, `status`, `uninstall`, run receipts, local telemetry, `runs`, Readiness Score, and benchmark summaries: implemented in the v0.5 candidate.
+- `install`, `init`, `doctor`, `diff`, `status`, `uninstall`, run receipts, local telemetry, `runs`, Readiness Score, and benchmark summaries: implemented and shipped in v0.5.0.
 - `presets`: now has a standalone human-readable and JSON command.
 - Stable manifest: implemented and covered by package verification and CLI tests.
 - Codex configuration compatibility: CI validates all rendered config and agent layers against OpenAI's published schema; this does not test runtime model execution or agent quality.
 - Benchmark field evidence: three successful paired repetitions per case are recorded, with an additional quota-blocked pair preserved. Evidence covers small local synthetic tasks on one runtime; broader field and runtime compatibility evidence remains limited. Do not promote these timings as causal evidence.
-- Documentation and npm release pipeline: present; PR #5 is merged to `main`. The v0.5.0 tag and release are not created yet; v1.0 has not been declared.
+- Documentation and npm release pipeline: present; PR #5 is merged to `main`, and v0.5.0 is tagged, released on GitHub, and published to npm. v1.0 has not been declared.
 
 ## v0.4 Visual Configurator
 

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.5.1 — 2026-10-13
+
+### Documentation
+
+- Corrected English and Spanish release status and the roadmap after v0.5.0 was published to npm.
+- Made release-tag instructions version-driven and clarified the least-privilege policy for npm staging tokens.
+
 ## 0.5.0 — 2026-10-12
 
 ### Installer safety

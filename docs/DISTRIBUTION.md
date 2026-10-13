@@ -31,11 +31,12 @@ Before creating a release it:
 5. uploads both as workflow artifacts;
 6. creates or updates the corresponding GitHub Release.
 
-Release command from an authorized local checkout for the current package version:
+Release commands from an authorized local checkout, using the version in `package.json`:
 
 ```bash
-git tag v0.5.0
-git push origin v0.5.0
+VERSION=$(node -p "require('./package.json').version")
+git tag "v${VERSION}"
+git push origin "v${VERSION}"
 ```
 
 Do not move an existing release tag after publication. Bump the version instead.
@@ -73,13 +74,13 @@ The GitHub workflow intentionally never runs `npm stage approve`.
 
 #### Token policy
 
-Do not create a direct-publish token with `All packages` access for this workflow.
+Do not create a direct-publish token with `All packages` access for this workflow. Keep `NPM_STAGE_TOKEN` stage-only, with 2FA bypass disabled and the shortest practical expiration. Once the package exists, limit the token to `codex-autopilot-kit`.
 
-For the first publication, `codex-autopilot-kit` may not yet appear in npm's package selector. A short-lived **stage-only** granular access token can therefore require temporary access to all packages so it can create the new unscoped package. That token must be stored only as the GitHub Environment secret `NPM_STAGE_TOKEN`, used only by the staging job, given the shortest practical expiration, and revoked after the first package is established if a narrower package-specific credential can replace it.
+For the first publication, `codex-autopilot-kit` may not yet appear in npm's package selector. Only for that bootstrap stage, a short-lived **stage-only** granular access token can require temporary access to all packages so it can create the new unscoped package. Store it only as the GitHub Environment secret `NPM_STAGE_TOKEN`, use it only in the staging job, keep 2FA bypass disabled, and replace it with a package-specific token as soon as the package exists. Revoke the bootstrap token after replacing it.
 
 Do not use `@crunaldo` merely because npm offers it in the selector; the repository publishes the unscoped `codex-autopilot-kit` package.
 
-Before the first npm stage:
+For the first npm publication only:
 
 1. confirm the unscoped package name `codex-autopilot-kit` is still available;
 2. configure the `npm` GitHub Environment;
@@ -88,8 +89,10 @@ Before the first npm stage:
 5. trigger `npm-stage` manually or enable `NPM_STAGE` for the intended release;
 6. inspect the staged package;
 7. approve manually with 2FA;
-8. verify registry metadata before changing README commands to npm-first syntax;
-9. revoke or narrow the temporary token after the package exists.
+8. verify registry metadata before claiming the package version is published;
+9. replace any temporary all-packages token with a package-specific token and revoke the bootstrap token.
+
+For subsequent releases, verify that `NPM_STAGE_TOKEN` is limited to `codex-autopilot-kit`, has no 2FA bypass, and remains short-lived before dispatching the staging job.
 
 Never claim that a version exists on npm until the approval has completed and the registry confirms it.
 
@@ -108,7 +111,7 @@ Never claim that a version exists on npm until the approval has completed and th
 [ ] npm stage inspected, if enabled
 [ ] npm stage approved manually with 2FA
 [ ] npm registry publication verified
-[ ] temporary stage token revoked or narrowed
+[ ] npm stage token is stage-only, package-specific, short-lived, and has 2FA bypass disabled
 ```
 
 The automated validation subset is available as:
